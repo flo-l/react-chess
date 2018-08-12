@@ -30,7 +30,7 @@ function Board(props) {
 
             let background = props.markedIndices[i];
             if (!background) {
-              if ((i + row) % 2 === 0) {
+              if ((i + row) % 2 === 1) {
                 background = "white";
               } else {
                 background = "black";
@@ -92,9 +92,9 @@ class Game extends React.Component {
       marked_indices = winner.indices;
     } else if (selected) {
       marked_indices[selected] = "selected";
-      for (const move in possible_moves) {
+      possible_moves.forEach(move => {
         marked_indices[move] = "possible_move"
-      }
+      });
     }
 
     return (
@@ -160,16 +160,14 @@ class Game extends React.Component {
         selected: null,
         possibleMoves: [],
       });
-
-      return;
     } else {
       if (this.playerColor() !== getColor(current.squares, i)) { return; }
 
       const possible_moves = possibleMoves(current.squares, this.playerColor() === WHITE, i);
+      console.log(possible_moves)
 
       // mark piece
       this.setState({selected: i, possibleMoves: possible_moves});
-      return;
     }
   }
 }
