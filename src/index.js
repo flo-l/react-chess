@@ -161,10 +161,9 @@ class Game extends React.Component {
         possibleMoves: [],
       });
     } else {
-      if (this.playerColor() !== getColor(current.squares, i)) { return; }
+      if (this.playerColor() !== getColor(current.squares[i])) { return; }
 
       const possible_moves = possibleMoves(current.squares, this.playerColor() === WHITE, i);
-      console.log(possible_moves)
 
       // mark piece
       this.setState({selected: i, possibleMoves: possible_moves});
