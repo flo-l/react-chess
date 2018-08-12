@@ -36,6 +36,7 @@ export function possibleMoves(squares, playerWhite, idx) {
 
   if (Object.values(possible_pieces).includes(piece))
   {
+    // TODO rochade
     return moveCheck[piece](squares, idx);
   }
 
@@ -44,7 +45,7 @@ export function possibleMoves(squares, playerWhite, idx) {
 
 const moveCheck = {
   // black
-  '♚': null,
+  '♚': kingPossibleMoves,
   '♛': queenPossibleMoves,
   '♜': rookPossibleMoves,
   '♝': bishopPossibleMoves,
@@ -52,7 +53,7 @@ const moveCheck = {
   '♟': pawnPossibleMoves,
 
   // white
-  '♔': null,
+  '♔': kingPossibleMoves,
   '♕': queenPossibleMoves,
   '♖': rookPossibleMoves,
   '♗': bishopPossibleMoves,
@@ -153,6 +154,23 @@ function queenPossibleMoves(squares, idx) {
   possible_moves.push(...withDeltas(squares, idx,  0, -1));
 
   return possible_moves;
+}
+
+function kingPossibleMoves(squares, idx) {
+  const row = getRow(idx);
+  const col = getCol(idx);
+  const playerColor = getColor(squares[idx]);
+
+  return [
+    getIndex(row + 0, col + 1),
+    getIndex(row + 1, col + 1),
+    getIndex(row + 1, col + 0),
+    getIndex(row + 1, col - 1),
+    getIndex(row + 0, col - 1),
+    getIndex(row - 1, col - 1),
+    getIndex(row - 1, col + 0),
+    getIndex(row - 1, col + 1),
+  ].filter(idx => idx && !ownPiece(squares, idx, playerColor));
 }
 
 function withDeltas(squares, idx, row_dir, col_dir) {
