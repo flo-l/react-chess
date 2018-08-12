@@ -90,7 +90,7 @@ class Game extends React.Component {
     let marked_indices = {};
     if (winner && winner.indices) {
       marked_indices = winner.indices;
-    } else if (selected) {
+    } else if (selected !== null) {
       marked_indices[selected] = "selected";
       possible_moves.forEach(move => {
         marked_indices[move] = "possible_move"
@@ -146,7 +146,7 @@ class Game extends React.Component {
     // ignore invalid clicks
     if (calculateWinner(current.squares, board_size)) { return; }
 
-    if (this.state.selected && this.state.possibleMoves.includes(i)) {
+    if (this.state.selected !== null && this.state.possibleMoves.includes(i)) {
       // make the move
       const squares = current.squares.slice();
       squares[i] = squares[this.state.selected];
