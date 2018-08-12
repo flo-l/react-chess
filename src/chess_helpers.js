@@ -48,7 +48,7 @@ const moveCheck = {
   '♛': null,
   '♜': null,
   '♝': null,
-  '♞': null,
+  '♞': knightPossibleMoves,
   '♟': pawnPossibleMoves,
 
   // white
@@ -56,7 +56,7 @@ const moveCheck = {
   '♕': null,
   '♖': null,
   '♗': null,
-  '♘': null,
+  '♘': knightPossibleMoves,
   '♙': pawnPossibleMoves,
 }
 
@@ -93,7 +93,25 @@ function pawnPossibleMoves(squares, idx) {
   possible_moves.push(...attack_fields);
 
   return possible_moves;
+}
 
+function knightPossibleMoves(squares, idx) {
+  const row = getRow(idx);
+  const col = getCol(idx);
+  const playerColor = getColor(squares[idx]);
+
+  return [[1, 2], [2, 1]].map(deltas => {
+    const delta_row = deltas[0];
+    const delta_col = deltas[1];
+    return [
+      getIndex(row + delta_row, col + delta_col),
+      getIndex(row - delta_row, col + delta_col),
+      getIndex(row + delta_row, col - delta_col),
+      getIndex(row - delta_row, col - delta_col),
+    ];
+  })
+  .reduce((acc, val) => acc.concat(val), [])
+  .filter(idx => idx && !ownPiece(squares, idx, playerColor));
 }
 
 function enemyPiece(squares, idx, ownColor) {
