@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import {BLACK, WHITE} from './pieces.js';
 
 function Square(props) {
   let classNames = ["square"];
-  if (props.marked) { classNames.push("marked"); }
+  if (props.background)  { classNames.push(props.background); }
 
   return (
     <button
@@ -15,63 +16,63 @@ function Square(props) {
   );
 }
 
-class Board extends React.Component {
-  renderSquare(i,marked) {
-    return <Square
-      key={i}
-      value={this.props.squares[i]}
-      onClick={() => this.props.onClick(i)}
-      marked={marked}
-    />;
-  }
+// this renders a n times n grid with Square
+function Board(props) {
+  const size = props.size;
+  const rows = [...Array(size).keys()].map((_, row) => {
+    return(
+      <div key={row} className="board-row">
+        {
+          [...Array(size).keys()]
+          .map((_, col) => {
+            const i = row * size + col;
 
-  render() {
-    const size = this.props.size;
-    const rows = [...Array(size).keys()].map((_, row) => {
-      return(
-        <div key={row} className="board-row">
-          {
-            [...Array(size).keys()]
-            .map((_, col) => {
-              const i = row * size + col;
-              return this.renderSquare(i, this.props.markedIndices.includes(i));
-            })
-          }
-        </div>
-      );
-    });
+            let background;
+            if (props.markedIndices.includes(i)) {
+              background = "marked";
+            } else if ((i + row) % 2 == 0) {
+              background = "white";
+            } else {
+              background = "black";
+            }
 
-    return (
-      <div>
-        {rows}
+            console.log(i)
+
+            return <Square
+              key={i}
+              i={i}
+              value={props.squares[i]}
+              onClick={() => props.onClick(i)}
+              background={background}
+            />;
+          })
+        }
       </div>
     );
-  }
+  });
+
+  return (
+    <div>
+      {rows}
+    </div>
+  );
 }
 
 class Game extends React.Component {
   constructor(props) {
     super(props);
-    const board_size = this.props.board_size
     this.state = {
       history: [{
-        squares: Array(board_size*board_size).fill(null),
+        squares: this.initPieces(),
       }],
-      xIsNext: true,
-      stepNumber: 0,
+      player1IsNext: true,
+      turnCount: 0,
     };
-  }
-
-  jumpTo(step) {
-    this.setState({
-      stepNumber: step,
-      xIsNext: (step % 2) === 0,
-    });
   }
 
   render() {
     const history = this.state.history;
-    const current = history[this.state.stepNumber];
+    const current = history[this.state.turnCount];
     const winner = calculateWinner(current.squares, this.props.board_size);
 
     let status;
@@ -122,12 +123,31 @@ class Game extends React.Component {
     );
   }
 
+  initPieces() {
+    const board_size = this.props.board_size;
+    return Array(board_size*board_size).fill(null).map((_,idx) => {
+      const row = Math.floor(idx / board_size);
+      const col = idx % board_size;
+
+      console.log(row)
+
+      const pieces = ['ROOK', 'KNIGHT', 'BISHOP', 'QUEEN', 'KING', 'BISHOP', 'KNIGHT', 'ROOK'];
+
+      if (col == 0) { return BLACK[pieces[row]]; }
+      if (col == 1) { return BLACK.PAWN; }
+      if (col == 6) { return WHITE.PAWN; }
+      if (col == 7) { return WHITE[pieces.reverse()[row]]; }
+
+      return null;
+    });
+  }
+
   playerString() {
-    return this.state.xIsNext ? 'X' : 'O';
+    return this.state.player1IsNext ? 'X' : 'O';
   }
 
   handleClick(i) {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const history = this.state.history.slice(0, this.state.turnCount + 1);
     const current = history[history.length - 1];
 
     if (calculateWinner(current.squares, this.props.board_size) || current.squares[i]) {
@@ -140,8 +160,8 @@ class Game extends React.Component {
       history: history.concat([{
         squares: squares,
       }]),
-      xIsNext: !this.state.xIsNext,
-      stepNumber: history.length,
+      player1IsNext: !this.state.player1IsNext,
+      turnCount: history.length,
     });
   }
 }
@@ -188,8 +208,10 @@ function calculateWinner(squares, board_size) {
 // ========================================
 
 ReactDOM.render(
+  <React.StrictMode>
   <Game
-    board_size={3}
-  />,
+    board_size={8}
+  />
+  </React.StrictMode>,
   document.getElementById('root')
 );
