@@ -142,37 +142,35 @@ class Game extends React.Component {
     const board_size = this.props.board_size
     const history = this.state.history.slice(0, this.state.turnCount + 1);
     const current = history[history.length - 1];
-    const row = getRow(i);
-    const col = getCol(i);
 
     // ignore invalid clicks
     if (calculateWinner(current.squares, board_size)) { return; }
 
     if (this.state.selected && this.state.possibleMoves.includes(i)) {
-      // TODO
+      // make the move
+      const squares = current.squares.slice();
+      squares[i] = squares[this.state.selected];
+      squares[this.state.selected] = null;
+      this.setState({
+        history: history.concat([{
+          squares: squares,
+        }]),
+        whiteIsNext: !this.state.whiteIsNext,
+        turnCount: history.length,
+        selected: null,
+        possibleMoves: [],
+      });
+
       return;
     } else {
       if (this.playerColor() !== getColor(current.squares, i)) { return; }
 
-      const possible_moves = possibleMoves(current.squares, this.playerString(), row, col);
+      const possible_moves = possibleMoves(current.squares, this.playerColor() === WHITE, i);
 
       // mark piece
       this.setState({selected: i, possibleMoves: possible_moves});
       return;
     }
-
-
-
-
-    const squares = current.squares.slice();
-    squares[i] = this.playerString();
-    this.setState({
-      history: history.concat([{
-        squares: squares,
-      }]),
-      whiteIsNext: !this.state.whiteIsNext,
-      turnCount: history.length,
-    });
   }
 }
 

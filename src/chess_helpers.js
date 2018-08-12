@@ -19,10 +19,9 @@ export function getColor(squares, idx) {
 }
 
 // returns the possible moves for a piece by a player
-export function possibleMoves(squares, playerWhite, row, col) {
+export function possibleMoves(squares, playerWhite, idx) {
   const possible_pieces = playerWhite ? WHITE : BLACK;
-  const i = getIndex(row, col);
-  const piece = squares[i];
+  const piece = squares[idx];
 
   if (Object.values(possible_pieces).includes(piece))
   {
