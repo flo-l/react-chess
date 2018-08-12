@@ -45,7 +45,7 @@ export function possibleMoves(squares, playerWhite, idx) {
 const moveCheck = {
   // black
   '♚': null,
-  '♛': null,
+  '♛': queenPossibleMoves,
   '♜': rookPossibleMoves,
   '♝': bishopPossibleMoves,
   '♞': knightPossibleMoves,
@@ -53,7 +53,7 @@ const moveCheck = {
 
   // white
   '♔': null,
-  '♕': null,
+  '♕': queenPossibleMoves,
   '♖': rookPossibleMoves,
   '♗': bishopPossibleMoves,
   '♘': knightPossibleMoves,
@@ -115,10 +115,7 @@ function knightPossibleMoves(squares, idx) {
 }
 
 function bishopPossibleMoves(squares, idx) {
-  const row = getRow(idx);
-  const col = getCol(idx);
   const playerColor = getColor(squares[idx]);
-
   const possible_moves = [];
 
   possible_moves.push(...withDeltas(squares, idx,  1,  1));
@@ -130,11 +127,25 @@ function bishopPossibleMoves(squares, idx) {
 }
 
 function rookPossibleMoves(squares, idx) {
-  const row = getRow(idx);
-  const col = getCol(idx);
   const playerColor = getColor(squares[idx]);
-
   const possible_moves = [];
+
+  possible_moves.push(...withDeltas(squares, idx,  1,  0));
+  possible_moves.push(...withDeltas(squares, idx, -1,  0));
+  possible_moves.push(...withDeltas(squares, idx,  0,  1));
+  possible_moves.push(...withDeltas(squares, idx,  0, -1));
+
+  return possible_moves;
+}
+
+function queenPossibleMoves(squares, idx) {
+  const playerColor = getColor(squares[idx]);
+  const possible_moves = [];
+
+  possible_moves.push(...withDeltas(squares, idx,  1,  1));
+  possible_moves.push(...withDeltas(squares, idx, -1,  1));
+  possible_moves.push(...withDeltas(squares, idx,  1, -1));
+  possible_moves.push(...withDeltas(squares, idx, -1, -1));
 
   possible_moves.push(...withDeltas(squares, idx,  1,  0));
   possible_moves.push(...withDeltas(squares, idx, -1,  0));
