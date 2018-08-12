@@ -47,7 +47,7 @@ const moveCheck = {
   '♚': null,
   '♛': null,
   '♜': null,
-  '♝': null,
+  '♝': bishopPossibleMoves,
   '♞': knightPossibleMoves,
   '♟': pawnPossibleMoves,
 
@@ -55,7 +55,7 @@ const moveCheck = {
   '♔': null,
   '♕': null,
   '♖': null,
-  '♗': null,
+  '♗': bishopPossibleMoves,
   '♘': knightPossibleMoves,
   '♙': pawnPossibleMoves,
 }
@@ -112,6 +112,29 @@ function knightPossibleMoves(squares, idx) {
   })
   .reduce((acc, val) => acc.concat(val), [])
   .filter(idx => idx && !ownPiece(squares, idx, playerColor));
+}
+
+function bishopPossibleMoves(squares, idx) {
+  const row = getRow(idx);
+  const col = getCol(idx);
+  const playerColor = getColor(squares[idx]);
+
+  const possible_moves = [];
+  const withDeltas = function(row_dir, col_dir) {
+    for (let x = 1; x < 8; x++) {
+      const i = getIndex(row + x * row_dir, col + x * col_dir);
+      if (!i || ownPiece(squares, i, playerColor)) { break; }
+      possible_moves.push(i);
+      if (enemyPiece(squares, i, playerColor)) { break; }
+    }
+  }
+
+  withDeltas( 1,  1);
+  withDeltas(-1,  1);
+  withDeltas( 1, -1);
+  withDeltas(-1, -1);
+
+  return possible_moves;
 }
 
 function enemyPiece(squares, idx, ownColor) {
