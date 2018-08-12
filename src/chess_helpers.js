@@ -12,13 +12,22 @@ export function getCol(idx) {
   return idx % 8;
 }
 
+export function getColor(squares, idx) {
+  const piece = squares[idx];
+  if (Object.values(WHITE).includes(piece)) { return WHITE; }
+  if (Object.values(BLACK).includes(piece)) { return BLACK; }
+}
+
 // returns the possible moves for a piece by a player
 export function possibleMoves(squares, playerWhite, row, col) {
-  const possiblePieces = playerWhite ? WHITE : BLACK;
+  const possible_pieces = playerWhite ? WHITE : BLACK;
   const i = getIndex(row, col);
   const piece = squares[i];
 
-  //if (possiblePieces.properties)
+  if (Object.values(possible_pieces).includes(piece))
+  {
+    return [0];
+  }
 
   return [];
 }

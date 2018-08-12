@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import {BLACK, WHITE} from './pieces.js';
-import {possibleMoves, getIndex, getRow, getCol} from './chess_helpers.js';
+import {possibleMoves, getIndex, getRow, getCol, getColor} from './chess_helpers.js';
 
 function Square(props) {
   let classNames = ["square"];
@@ -28,13 +28,13 @@ function Board(props) {
           .map((_, col) => {
             const i = getIndex(row, col);
 
-            let background;
-            if (props.markedIndices.includes(i)) {
-              background = "marked";
-            } else if ((i + row) % 2 === 0) {
-              background = "white";
-            } else {
-              background = "black";
+            let background = props.markedIndices[i];
+            if (!background) {
+              if ((i + row) % 2 === 0) {
+                background = "white";
+              } else {
+                background = "black";
+              }
             }
 
             return <Square
@@ -66,6 +66,8 @@ class Game extends React.Component {
       }],
       whiteIsNext: true,
       turnCount: 0,
+      selected: null,
+      possibleMoves: [],
     };
   }
 
@@ -73,6 +75,8 @@ class Game extends React.Component {
     const history = this.state.history;
     const current = history[this.state.turnCount];
     const winner = calculateWinner(current.squares, this.props.board_size);
+    const selected = this.state.selected;
+    const possible_moves = this.state.possibleMoves;
 
     let status;
     if (winner && winner.winner) {
@@ -83,13 +87,16 @@ class Game extends React.Component {
       status = 'Next player: ' + this.playerString();
     }
 
-    let marked_indices;
+    let marked_indices = {};
     if (winner && winner.indices) {
       marked_indices = winner.indices;
-    } else {
-      marked_indices = [];
+    } else if (selected) {
+      marked_indices[selected] = "selected";
+      for (const move in possible_moves) {
+        marked_indices[move] = "possible_move"
+      }
     }
-    
+
     return (
       <div className="game">
         <div className="game-board">
@@ -123,21 +130,39 @@ class Game extends React.Component {
     });
   }
 
+  playerColor() {
+    return this.state.whiteIsNext ? WHITE : BLACK;
+  }
+
   playerString() {
-    return this.state.whiteIsNext ? 'White' : 'Black';
+    return this.playerColor() === WHITE ? 'White' : 'Black';
   }
 
   handleClick(i) {
     const board_size = this.props.board_size
     const history = this.state.history.slice(0, this.state.turnCount + 1);
     const current = history[history.length - 1];
-    const row = getRow(i).row;
-    const col = getCol(i).col;
-    const possible_moves = possibleMoves(current, this.playerString(), row, col);
+    const row = getRow(i);
+    const col = getCol(i);
 
-    if (calculateWinner(current.squares, this.props.board_size) || possible_moves.length === 0) {
+    // ignore invalid clicks
+    if (calculateWinner(current.squares, board_size)) { return; }
+
+    if (this.state.selected && this.state.possibleMoves.includes(i)) {
+      // TODO
+      return;
+    } else {
+      if (this.playerColor() !== getColor(current.squares, i)) { return; }
+
+      const possible_moves = possibleMoves(current.squares, this.playerString(), row, col);
+
+      // mark piece
+      this.setState({selected: i, possibleMoves: possible_moves});
       return;
     }
+
+
+
 
     const squares = current.squares.slice();
     squares[i] = this.playerString();

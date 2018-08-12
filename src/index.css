@@ -31,8 +31,12 @@ ol, ul {
   width: 34px;
 }
 
-.marked {
+.selected {
   background: #e0df63;
+}
+
+.possible_move {
+  background: #80a0ea;
 }
 
 .black {
