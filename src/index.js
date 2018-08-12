@@ -63,6 +63,7 @@ class Game extends React.Component {
     this.state = {
       history: [{
         squares: this.initPieces(),
+        playerState: [this.initPlayerState(), this.initPlayerState()],
       }],
       whiteIsNext: true,
       turnCount: 0,
@@ -130,6 +131,14 @@ class Game extends React.Component {
     });
   }
 
+  initPlayerState() {
+    return {
+      kingMoved: false,
+      leftRookMoved: false,
+      rightRookMoved: false,
+    }
+  }
+
   playerColor() {
     return this.state.whiteIsNext ? WHITE : BLACK;
   }
@@ -148,12 +157,16 @@ class Game extends React.Component {
 
     if (this.state.selected !== null && this.state.possibleMoves.includes(i)) {
       // make the move
+      // TODO change player state
+
+      const playerState = current.playerState.slice();
       const squares = current.squares.slice();
       squares[i] = squares[this.state.selected];
       squares[this.state.selected] = null;
       this.setState({
         history: history.concat([{
           squares: squares,
+          playerState: playerState,
         }]),
         whiteIsNext: !this.state.whiteIsNext,
         turnCount: history.length,
@@ -163,7 +176,13 @@ class Game extends React.Component {
     } else {
       if (this.playerColor() !== getColor(current.squares[i])) { return; }
 
-      const possible_moves = possibleMoves(current.squares, this.playerColor() === WHITE, i);
+      const playerState = this.playerColor() === WHITE ? current.playerState[0] : current.playerState[1];
+      const gameState = {
+        ...playerState,
+        squares: current.squares,
+        playerColor: this.playerColor()
+      };
+      const possible_moves = possibleMoves(gameState, i);
 
       // mark piece
       this.setState({selected: i, possibleMoves: possible_moves});

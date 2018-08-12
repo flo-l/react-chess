@@ -30,8 +30,10 @@ function invertColor(color) {
 }
 
 // returns the possible moves for a piece by a player
-export function possibleMoves(squares, playerWhite, idx) {
-  const possible_pieces = playerWhite ? WHITE : BLACK;
+// gamestate: {squares: squares, kingMoved: Bool, leftRookMoved: Bool, rightRookMoved, playerColor: WHITE or BLACK}
+export function possibleMoves(gameState, idx) {
+  const squares = gameState.squares;
+  const possible_pieces = gameState.playerColor;
   const piece = squares[idx];
 
   if (Object.values(possible_pieces).includes(piece))
@@ -116,7 +118,6 @@ function knightPossibleMoves(squares, idx) {
 }
 
 function bishopPossibleMoves(squares, idx) {
-  const playerColor = getColor(squares[idx]);
   const possible_moves = [];
 
   possible_moves.push(...withDeltas(squares, idx,  1,  1));
@@ -128,7 +129,6 @@ function bishopPossibleMoves(squares, idx) {
 }
 
 function rookPossibleMoves(squares, idx) {
-  const playerColor = getColor(squares[idx]);
   const possible_moves = [];
 
   possible_moves.push(...withDeltas(squares, idx,  1,  0));
@@ -140,7 +140,6 @@ function rookPossibleMoves(squares, idx) {
 }
 
 function queenPossibleMoves(squares, idx) {
-  const playerColor = getColor(squares[idx]);
   const possible_moves = [];
 
   possible_moves.push(...withDeltas(squares, idx,  1,  1));
