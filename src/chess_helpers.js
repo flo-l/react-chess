@@ -79,6 +79,10 @@ export class ChessState {
     return this.whiteIsNext ? WHITE : BLACK;
   }
 
+  enemyColor() {
+    return !this.whiteIsNext ? WHITE : BLACK;
+  }
+
   playerString() {
     return this.whiteIsNext ? 'white' : 'black';
   }
@@ -101,6 +105,19 @@ export class ChessState {
 
   belongsToCurrentPlayer(i) {
     return Object.values(this.playerColor()).includes(this.squares[i]);
+  }
+
+  isUnderAttack(i) {
+    const ownColor = this.playerColor();
+    const fictionalSquares = this.squares.slice();
+    fictionalSquares[i] = ownColor.PAWN;
+    const fictionalState = this.setNextPlayer({squares: fictionalSquares});
+
+    return fictionalState.squares
+      .filter((_, idx) => enemyPiece(fictionalState.squares, idx, ownColor))
+      .map((_, i) => possibleMoves(fictionalState, i))
+      .reduce((acc, x) => acc.concat(x), [])
+      .some(x => x === i);
   }
 
   // this returns a new chess state with the move made
@@ -158,32 +175,38 @@ export class ChessState {
 
     const new_props = {
       squares: new_squares,
-      whiteIsNext: !this.whiteIsNext,
       playerState: new_player_state,
-      turnCount: this.turnCount + 1,
-      possibleMoves: {}
     }
 
-    return new ChessState(new_props);
+    return this.setNextPlayer(new_props);
   }
 
   calculateWinner() {
     return false;
   }
+
+  // sets next player without making any move
+  setNextPlayer(props) {
+    const new_props = {
+      squares: this.squares.slice(),
+      whiteIsNext: !this.whiteIsNext,
+      playerState: JSON.parse(JSON.stringify(this.playerState)),
+      turnCount: this.turnCount + 1,
+      possibleMoves: {}
+    }
+
+    return new ChessState(Object.assign({}, new_props, props));
+  }
 }
 
-// returns the possible moves for a piece by a player
+// returns the possible moves for a piece
 function possibleMoves(chessState, idx) {
-  const possible_pieces = chessState.playerColor();
-  const squares = chessState.squares;
-  const piece = squares[idx];
-
-  if (Object.values(possible_pieces).includes(piece))
-  {
+  const piece = chessState.squares[idx];
+  if (piece) {
     return moveCheck[piece](chessState, idx);
+  } else {
+    return [];
   }
-
-  return [];
 }
 
 const moveCheck = {
@@ -324,7 +347,7 @@ function kingPossibleMoves(chessState, idx) {
     getIndex(row - 1, col - 1),
     getIndex(row - 1, col + 0),
     getIndex(row - 1, col + 1),
-  ].filter(idx => idx && !ownPiece(squares, idx, playerColor));
+  ].filter(idx => idx !== undefined && !ownPiece(squares, idx, playerColor));
 
   // castling
   if (!playerState.kingMoved && !playerState.row0RookMoved) {
