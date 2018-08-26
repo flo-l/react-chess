@@ -1,17 +1,23 @@
-import { clickSquare } from '../actions'
-import { initPieces } from '../chess_helpers'
+import { ChessState } from '../chess_helpers'
 
 const initialState = {
-  squares: initPieces(),
+  chess: new ChessState,
   selectedIndex: null
 };
 
 export const board = (state = initialState, action) => {
   switch (action.type) {
     case 'CLICK_SQUARE':
-      return Object.assign({}, state, {
-        selectedIndex: action.index
-      });
+      if (state.selectedIndex === null) {
+        return Object.assign({}, state, {
+          selectedIndex: action.index
+        });
+      } else {
+          // check if the click is valid etc..
+          return Object.assign({}, state, {
+            selectedIndex: null
+          });
+      }
     default:
       return state;
   }

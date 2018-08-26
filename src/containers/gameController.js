@@ -10,7 +10,7 @@ const mapStateToProps = state => {
 
   return {
     board_size: 8,
-    squares: state.board.squares,
+    squares: state.board.chess.squares,
     markedIndices: marked,
     status: 'status text'
   };

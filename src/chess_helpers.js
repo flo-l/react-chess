@@ -29,20 +29,119 @@ function invertColor(color) {
   }
 }
 
-export function initPieces() {
-  const board_size = 8;
-  return Array(board_size*board_size).fill(null).map((_,idx) => {
-    const row = getRow(idx);
-    const col = getCol(idx);
-    const pieces = ['ROOK', 'KNIGHT', 'BISHOP', 'QUEEN', 'KING', 'BISHOP', 'KNIGHT', 'ROOK'];
+export class ChessState {
+  constructor() {
+    this.squares = ChessState.initPieces();
+    this.playerState = [this.initPlayerState(), this.initPlayerState()];
+    this.whiteIsNext = true;
+    this.turnCount = 0;
+    this.possibleMoves = [];
+  }
 
-    if (col === 0) { return BLACK[pieces.reverse()[row]]; }
-    if (col === 1) { return BLACK.PAWN; }
-    if (col === 6) { return WHITE.PAWN; }
-    if (col === 7) { return WHITE[pieces[row]]; }
+  static initPieces() {
+    const board_size = 8;
+    return Array(board_size*board_size).fill(null).map((_,idx) => {
+      const row = getRow(idx);
+      const col = getCol(idx);
+      const pieces = ['ROOK', 'KNIGHT', 'BISHOP', 'QUEEN', 'KING', 'BISHOP', 'KNIGHT', 'ROOK'];
 
-    return null;
-  });
+      if (col === 0) { return BLACK[pieces.reverse()[row]]; }
+      if (col === 1) { return BLACK.PAWN; }
+      if (col === 6) { return WHITE.PAWN; }
+      if (col === 7) { return WHITE[pieces[row]]; }
+
+      return null;
+    });
+  }
+
+  initPlayerState() {
+    return {
+      kingMoved: false,
+      leftRookMoved: false,
+      rightRookMoved: false,
+    }
+  }
+
+  render() {
+    const history = this.state.history;
+    const current = history[this.state.turnCount];
+    const winner = this.calculateWinner(current.squares, this.props.board_size);
+    const selected = this.state.selected;
+    const possible_moves = this.state.possibleMoves;
+
+    let status;
+    if (winner && winner.winner) {
+      status = 'Winner: ' + winner.winner;
+    } else if (winner && winner.draw) {
+      status = 'Draw';
+    } else {
+      status = 'Next player: ' + this.playerString();
+    }
+
+    let marked_indices = {};
+    if (winner && winner.indices) {
+      marked_indices = winner.indices;
+    } else if (selected !== null) {
+      marked_indices[selected] = "selected";
+      possible_moves.forEach(move => {
+        marked_indices[move] = "possible_move"
+      });
+    }
+  }
+
+  playerColor() {
+    return this.state.whiteIsNext ? WHITE : BLACK;
+  }
+
+  playerString() {
+    return this.playerColor() === WHITE ? 'White' : 'Black';
+  }
+
+  handleClick(i) {
+    const board_size = this.props.board_size
+    const history = this.state.history.slice(0, this.state.turnCount + 1);
+    const current = history[history.length - 1];
+
+    // ignore invalid clicks
+    if (this.calculateWinner(current.squares, board_size)) { return; }
+
+    if (this.state.selected !== null && this.state.possibleMoves.includes(i)) {
+      // make the move
+      // TODO change player state
+
+      const playerState = current.playerState.slice();
+      const squares = current.squares.slice();
+      squares[i] = squares[this.state.selected];
+      squares[this.state.selected] = null;
+      this.setState({
+        history: history.concat([{
+          squares: squares,
+          playerState: playerState,
+        }]),
+        whiteIsNext: !this.state.whiteIsNext,
+        turnCount: history.length,
+        selected: null,
+        possibleMoves: [],
+      });
+    } else {
+      if (this.playerColor() !== getColor(current.squares[i])) { return; }
+
+      const playerState = this.playerColor() === WHITE ? current.playerState[0] : current.playerState[1];
+      const gameState = {
+        ...playerState,
+        squares: current.squares,
+        playerColor: this.playerColor()
+      };
+      const possible_moves = possibleMoves(gameState, i);
+
+      // mark piece
+      this.setState({selected: i, possibleMoves: possible_moves});
+    }
+  }
+
+  calculateWinner() {
+    return false;
+  }
 }
 
 // returns the possible moves for a piece by a player
