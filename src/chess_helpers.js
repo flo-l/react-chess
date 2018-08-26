@@ -106,57 +106,12 @@ export class ChessState {
     const new_props = {
       squares: new_squares,
       whiteIsNext: !this.whiteIsNext,
+      playerState: JSON.parse(JSON.stringify(this.playerState)), // well, it's a hack for deep copying..
       turnCount: this.turnCount + 1,
       possibleMoves: {}
     }
 
     return new ChessState(new_props);
-  }
-
-  freeField(i) {
-    return this.squares[i] === null;
-  }
-
-  handleClick(i) {
-    const board_size = this.props.board_size
-    const history = this.state.history.slice(0, this.state.turnCount + 1);
-    const current = history[history.length - 1];
-
-    // ignore invalid clicks
-    if (this.calculateWinner(current.squares, board_size)) { return; }
-
-    if (this.state.selected !== null && this.state.possibleMoves.includes(i)) {
-      // make the move
-      // TODO change player state
-
-      const playerState = current.playerState.slice();
-      const squares = current.squares.slice();
-      squares[i] = squares[this.state.selected];
-      squares[this.state.selected] = null;
-      this.setState({
-        history: history.concat([{
-          squares: squares,
-          playerState: playerState,
-        }]),
-        whiteIsNext: !this.state.whiteIsNext,
-        turnCount: history.length,
-        selected: null,
-        possibleMoves: [],
-      });
-    } else {
-      if (this.playerColor() !== getColor(current.squares[i])) { return; }
-
-      const playerState = this.playerColor() === WHITE ? current.playerState[0] : current.playerState[1];
-      const gameState = {
-        ...playerState,
-        squares: current.squares,
-        playerColor: this.playerColor()
-      };
-      const possible_moves = possibleMoves(gameState, i);
-
-      // mark piece
-      this.setState({selected: i, possibleMoves: possible_moves});
-    }
   }
 
   calculateWinner() {
