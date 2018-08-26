@@ -55,7 +55,7 @@ export class ChessState {
       return null;
     });
 
-    return squares;
+    return squares.map(x => {if (x === BLACK.ROOK || x === WHITE.ROOK || x === BLACK.KING || x === WHITE.KING) { return x } else { return null }});
   }
 
   static initPlayerState() {
@@ -114,20 +114,21 @@ export class ChessState {
     const fictionalState = this.setNextPlayer({squares: fictionalSquares});
 
     return fictionalState.squares
-      .filter((_, idx) => enemyPiece(fictionalState.squares, idx, ownColor))
-      .map((_, i) => possibleMoves(fictionalState, i, false))
-      .reduce((acc, x) => acc.concat(x), [])
+      .map((_, idx) => idx)
+      .filter(idx => enemyPiece(fictionalState.squares, idx, ownColor))
+      .map(idx => possibleMoves(fictionalState, idx, false))
+      .reduce((acc, ids) => acc.concat(ids), [])
       .some(x => x === i);
   }
 
-  // king of ownColor is being attack
+  // king of ownColor is being attacked
   isCheck(ownColor = this.playerColor()) {
     const king = ownColor.KING;
 
     return this.squares
       .map((x,i) => [x,i])
       .filter(x => x[0] === king)
-      .every(x => !this.isUnderAttack(x[1], ownColor));
+      .every(x => !this.isUnderAttack(x[1], invertColor(ownColor)));
   }
 
   // this returns a new chess state with the move made
@@ -214,8 +215,6 @@ function possibleMoves(chessState, idx, checkForMate) {
     return moveCheck[piece](chessState, idx).filter(move => {
       if (checkForMate) {
         const new_state = chessState.makeMove(idx, move);
-        console.log(idx, move, !new_state.isCheck(chessState.playerColor()));
-
         return new_state.isCheck(chessState.playerColor());
       } else {
         return true;
@@ -367,16 +366,16 @@ function kingPossibleMoves(chessState, idx) {
   ].filter(idx => idx !== undefined && !ownPiece(squares, idx, playerColor));
 
   // castling
-  if (!playerState.kingMoved && !playerState.row0RookMoved) {
+  if (!playerState.kingMoved && !playerState.row0RookMoved && !chessState.isCheck()) {
     const fields_free = ![...Array(row - 1).keys()].some(i => !freeField(squares, getIndex(i + 1, col)));
-    if (fields_free) {
+    if (fields_free && chessState.isUnderAttack(getIndex(row + 1, col))) {
       moves.push(getIndex(row - 2, col));
     }
   }
 
-  if (!playerState.kingMoved && !playerState.row7RookMoved) {
+  if (!playerState.kingMoved && !playerState.row7RookMoved && !chessState.isCheck()) {
     const fields_free = ![...Array(8 - row - 2).keys()].some(i => !freeField(squares, getIndex(i + row + 1, col)));
-    if (fields_free) {
+    if (fields_free && chessState.isUnderAttack(getIndex(row - 1, col))) {
       moves.push(getIndex(row + 2, col));
     }
   }
