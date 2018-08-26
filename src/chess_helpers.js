@@ -42,7 +42,7 @@ export class ChessState {
 
   static initPieces() {
     const board_size = 8;
-    return Array(board_size*board_size).fill(null).map((_,idx) => {
+    const squares = Array(board_size*board_size).fill(null).map((_,idx) => {
       const row = getRow(idx);
       const col = getCol(idx);
       const pieces = ['ROOK', 'KNIGHT', 'BISHOP', 'QUEEN', 'KING', 'BISHOP', 'KNIGHT', 'ROOK'];
@@ -54,6 +54,8 @@ export class ChessState {
 
       return null;
     });
+
+    return squares;
   }
 
   static initPlayerState() {
@@ -110,6 +112,7 @@ export class ChessState {
     new_squares[from] = null;
 
     const new_player_state = JSON.parse(JSON.stringify(this.playerState)); // well, it's a hack for deep copying..
+
     // update playerState
     const row = getRow(from);
     const col = getCol(from);
@@ -132,6 +135,26 @@ export class ChessState {
     }
 
     current_player_state.kingMoved = current_player_state.kingMoved || this.squares[from] === WHITE.KING || this.squares[from] === BLACK.KING;
+
+    // handle en passant
+    if (this.squares[from] === this.playerColor().PAWN && freeField(this.squares, to) && getRow(from) !== getRow(to))
+    {
+      new_squares[getIndex(getRow(to), getCol(from))] = null;
+    }
+
+    // handle castling
+    const delta_row = getRow(from) - getRow(to);
+    if (this.squares[from] === this.playerColor().KING && Math.abs(delta_row) === 2) {
+      if (delta_row < 0) {
+        current_player_state.row7RookMoved = true;
+        new_squares[getIndex(7, col)] = null;
+        new_squares[getIndex(row + 1, col)] = this.playerColor().ROOK;
+      } else {
+        current_player_state.row0RookMoved = true;
+        new_squares[getIndex(0, col)] = null;
+        new_squares[getIndex(row - 1, col)] = this.playerColor().ROOK;
+      }
+    }
 
     const new_props = {
       squares: new_squares,
@@ -290,8 +313,9 @@ function kingPossibleMoves(chessState, idx) {
   const row = getRow(idx);
   const col = getCol(idx);
   const playerColor = getColor(squares[idx]);
+  const playerState = chessState.currentPlayerState();
 
-  return [
+  const moves = [
     getIndex(row + 0, col + 1),
     getIndex(row + 1, col + 1),
     getIndex(row + 1, col + 0),
@@ -301,6 +325,23 @@ function kingPossibleMoves(chessState, idx) {
     getIndex(row - 1, col + 0),
     getIndex(row - 1, col + 1),
   ].filter(idx => idx && !ownPiece(squares, idx, playerColor));
+
+  // castling
+  if (!playerState.kingMoved && !playerState.row0RookMoved) {
+    const fields_free = ![...Array(row - 1).keys()].some(i => !freeField(squares, getIndex(i + 1, col)));
+    if (fields_free) {
+      moves.push(getIndex(row - 2, col));
+    }
+  }
+
+  if (!playerState.kingMoved && !playerState.row7RookMoved) {
+    const fields_free = ![...Array(8 - row - 2).keys()].some(i => !freeField(squares, getIndex(i + row + 1, col)));
+    if (fields_free) {
+      moves.push(getIndex(row + 2, col));
+    }
+  }
+
+  return moves;
 }
 
 function withDeltas(squares, idx, row_dir, col_dir) {
