@@ -83,7 +83,7 @@ export class ChessState {
   }
 
   playerString() {
-    return this.playerColor() === WHITE ? 'White' : 'Black';
+    return this.whiteIsNext ? 'white' : 'black';
   }
 
   currentPlayerState() {

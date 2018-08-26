@@ -16,7 +16,7 @@ const mapStateToProps = state => {
     board_size: 8,
     squares: state.board.chess.squares,
     markedIndices: marked,
-    status: 'status text'
+    status: "Next player is " + state.board.chess.playerString()
   };
 };
 
