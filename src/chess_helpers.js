@@ -59,8 +59,9 @@ export class ChessState {
   static initPlayerState() {
     return {
       kingMoved: false,
-      leftRookMoved: false,
-      rightRookMoved: false,
+      row0RookMoved: false,
+      row7RookMoved: false,
+      pawnMoved: null,
     }
   }
 
@@ -86,9 +87,12 @@ export class ChessState {
     return this.whiteIsNext ? 'white' : 'black';
   }
 
+  currentPlayerNumber() {
+    return this.whiteIsNext ? 0 : 1;
+  }
+
   currentPlayerState() {
-    let i = this.whiteIsNext ? 0 : 1;
-    return this.playerState[i];
+    return this.playerState[this.currentPlayerNumber()];
   }
 
   belongsToCurrentPlayer(i) {
@@ -103,10 +107,34 @@ export class ChessState {
     new_squares[to] = this.squares[from];
     new_squares[from] = null;
 
+    const new_player_state = JSON.parse(JSON.stringify(this.playerState)); // well, it's a hack for deep copying..
+    // update playerState
+    const row = getRow(from);
+    const col = getCol(from);
+    const current_player_state = new_player_state[this.currentPlayerNumber()];
+    if (this.squares[from] === WHITE.ROOK || this.squares[from] === BLACK.ROOK) {
+      const first_col = this.playerColor() === WHITE ? 7 : 0;
+
+      if (row === 0 && col === first_col)
+      {
+        current_player_state.row0RookMoved = true;
+      } else if (row === 7 && col === first_col) {
+        current_player_state.row7RookMoved = true;
+      }
+    }
+
+    if ((this.squares[from] === WHITE.PAWN && col === 6) || (this.squares[from] === BLACK.PAWN && col === 1)) {
+      current_player_state.pawnMoved = row;
+    } else {
+      current_player_state.pawnMoved = null;
+    }
+
+    current_player_state.kingMoved = current_player_state.kingMoved || this.squares[from] === WHITE.KING || this.squares[from] === BLACK.KING;
+
     const new_props = {
       squares: new_squares,
       whiteIsNext: !this.whiteIsNext,
-      playerState: JSON.parse(JSON.stringify(this.playerState)), // well, it's a hack for deep copying..
+      playerState: new_player_state,
       turnCount: this.turnCount + 1,
       possibleMoves: {}
     }
@@ -120,7 +148,6 @@ export class ChessState {
 }
 
 // returns the possible moves for a piece by a player
-// gamestate: {squares: squares, kingMoved: Bool, leftRookMoved: Bool, rightRookMoved: Bool, playerColor: WHITE or BLACK}
 function possibleMoves(chessState, idx) {
   const possible_pieces = chessState.playerColor;
   const squares = chessState.squares;
@@ -128,7 +155,6 @@ function possibleMoves(chessState, idx) {
 
   if (Object.values(possible_pieces).includes(piece))
   {
-    // TODO rochade
     return moveCheck[piece](chessState, idx);
   }
 
