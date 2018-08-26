@@ -1,14 +1,16 @@
 import { clickSquare } from '../actions'
+import { initPieces } from '../chess_helpers'
 
 const initialState = {
-  idx: null
-}
+  squares: initPieces(),
+  selectedIndex: null
+};
 
-export const clickSquareReducer = (state = initialState, action) => {
+export const board = (state = initialState, action) => {
   switch (action.type) {
     case 'CLICK_SQUARE':
       return Object.assign({}, state, {
-        idx: action.index
+        selectedIndex: action.index
       });
     default:
       return state;

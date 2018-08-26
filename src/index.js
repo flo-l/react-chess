@@ -71,22 +71,6 @@ class GameOld extends React.Component {
     );
   }
 
-  initPieces() {
-    const board_size = this.props.board_size;
-    return Array(board_size*board_size).fill(null).map((_,idx) => {
-      const row = getRow(idx);
-      const col = getCol(idx);
-      const pieces = ['ROOK', 'KNIGHT', 'BISHOP', 'QUEEN', 'KING', 'BISHOP', 'KNIGHT', 'ROOK'];
-
-      if (col === 0) { return BLACK[pieces[row]]; }
-      if (col === 1) { return BLACK.PAWN; }
-      if (col === 6) { return WHITE.PAWN; }
-      if (col === 7) { return WHITE[pieces.reverse()[row]]; }
-
-      return null;
-    });
-  }
-
   initPlayerState() {
     return {
       kingMoved: false,

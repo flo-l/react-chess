@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import { clickSquareReducer } from './clickSquare'
+import { board } from './board'
 
 export default combineReducers({
-  clickSquareReducer
+  board
 });
