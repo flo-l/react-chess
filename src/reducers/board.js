@@ -8,10 +8,7 @@ const initialState = {
 export const board = (state = initialState, action) => {
   switch (action.type) {
     case 'CLICK_SQUARE':
-      if (
-        state.selectedIndex === null ||
-        state.chess.belongsToCurrentPlayer(action.index))
-      {
+      if (state.chess.belongsToCurrentPlayer(action.index)) {
         return Object.assign({}, state, {
           selectedIndex: action.index
         });

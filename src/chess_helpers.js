@@ -121,15 +121,15 @@ export class ChessState {
 
 // returns the possible moves for a piece by a player
 // gamestate: {squares: squares, kingMoved: Bool, leftRookMoved: Bool, rightRookMoved: Bool, playerColor: WHITE or BLACK}
-function possibleMoves(gameState, idx) {
-  const squares = gameState.squares;
-  const possible_pieces = gameState.playerColor;
+function possibleMoves(chessState, idx) {
+  const possible_pieces = chessState.playerColor;
+  const squares = chessState.squares;
   const piece = squares[idx];
 
   if (Object.values(possible_pieces).includes(piece))
   {
     // TODO rochade
-    return moveCheck[piece](squares, idx);
+    return moveCheck[piece](chessState, idx);
   }
 
   return [];
@@ -153,7 +153,8 @@ const moveCheck = {
   '♙': pawnPossibleMoves,
 }
 
-function pawnPossibleMoves(squares, idx) {
+function pawnPossibleMoves(chessState, idx) {
+  const squares = chessState.squares;
   const row = getRow(idx);
   const col = getCol(idx);
   const playerColor = getColor(squares[idx]);
@@ -188,7 +189,8 @@ function pawnPossibleMoves(squares, idx) {
   return possible_moves;
 }
 
-function knightPossibleMoves(squares, idx) {
+function knightPossibleMoves(chessState, idx) {
+  const squares = chessState.squares;
   const row = getRow(idx);
   const col = getCol(idx);
   const playerColor = getColor(squares[idx]);
@@ -207,7 +209,8 @@ function knightPossibleMoves(squares, idx) {
   .filter(idx => idx && !ownPiece(squares, idx, playerColor));
 }
 
-function bishopPossibleMoves(squares, idx) {
+function bishopPossibleMoves(chessState, idx) {
+  const squares = chessState.squares;
   const possible_moves = [];
 
   possible_moves.push(...withDeltas(squares, idx,  1,  1));
@@ -218,7 +221,8 @@ function bishopPossibleMoves(squares, idx) {
   return possible_moves;
 }
 
-function rookPossibleMoves(squares, idx) {
+function rookPossibleMoves(chessState, idx) {
+  const squares = chessState.squares;
   const possible_moves = [];
 
   possible_moves.push(...withDeltas(squares, idx,  1,  0));
@@ -229,7 +233,8 @@ function rookPossibleMoves(squares, idx) {
   return possible_moves;
 }
 
-function queenPossibleMoves(squares, idx) {
+function queenPossibleMoves(chessState, idx) {
+  const squares = chessState.squares;
   const possible_moves = [];
 
   possible_moves.push(...withDeltas(squares, idx,  1,  1));
@@ -245,7 +250,8 @@ function queenPossibleMoves(squares, idx) {
   return possible_moves;
 }
 
-function kingPossibleMoves(squares, idx) {
+function kingPossibleMoves(chessState, idx) {
+  const squares = chessState.squares;
   const row = getRow(idx);
   const col = getCol(idx);
   const playerColor = getColor(squares[idx]);
