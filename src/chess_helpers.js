@@ -67,13 +67,7 @@ export class ChessState {
 
   getPossibleMoves(i) {
     if (!this.possibleMoves.hasOwnProperty(i)) {
-      this.possibleMoves[i] = possibleMoves(Object.assign({
-          squares: this.squares,
-          playerColor: this.playerColor(),
-        },
-        this.currentPlayerState()
-      ),
-      i);
+      this.possibleMoves[i] = possibleMoves(this, i);
     }
 
     return this.possibleMoves[i];
@@ -91,8 +85,16 @@ export class ChessState {
     return this.whiteIsNext ? 0 : 1;
   }
 
+  otherPlayerNumber() {
+    return this.whiteIsNext ? 1 : 0;
+  }
+
   currentPlayerState() {
     return this.playerState[this.currentPlayerNumber()];
+  }
+
+  otherPlayerState() {
+    return this.playerState[this.otherPlayerNumber()];
   }
 
   belongsToCurrentPlayer(i) {
@@ -149,7 +151,7 @@ export class ChessState {
 
 // returns the possible moves for a piece by a player
 function possibleMoves(chessState, idx) {
-  const possible_pieces = chessState.playerColor;
+  const possible_pieces = chessState.playerColor();
   const squares = chessState.squares;
   const piece = squares[idx];
 
@@ -211,6 +213,13 @@ function pawnPossibleMoves(chessState, idx) {
   .filter(idx => enemyPiece(squares, idx, playerColor));
 
   possible_moves.push(...attack_fields);
+
+  // en passant
+  const pawn_moved = chessState.otherPlayerState().pawnMoved;
+  const en_passant_col = chessState.playerColor() === WHITE ? 3 : 4;
+  if ((pawn_moved === row + 1 || pawn_moved === row - 1) && col === en_passant_col) {
+    possible_moves.push(getIndex(pawn_moved, en_passant_col + direction));
+  }
 
   return possible_moves;
 }
