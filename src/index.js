@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Provider from 'react-redux';
-import createStore from 'redux';
-//import rootReducer from './reducers'
+import { createStore } from 'redux';
+import rootReducer from './reducers'
 import Board from './components/board';
+import BoardController from './containers/boardController'
 import { BLACK, WHITE } from './pieces';
 import { possibleMoves, getRow, getCol, getColor } from './chess_helpers.js';
 import './index.css'
+
+const store = createStore(rootReducer,
+window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
 class Game extends React.Component {
   constructor(props) {
@@ -146,12 +150,11 @@ function calculateWinner(squares, board_size) {
 }
 
 // ========================================
+//  <Game
+//    board_size={8}
+//  />
 
 ReactDOM.render(
-  <React.StrictMode>
-  <Game
-    board_size={8}
-  />
-  </React.StrictMode>,
+  <BoardController store={store} />,
   document.getElementById('root')
 );
