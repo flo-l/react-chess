@@ -17,8 +17,11 @@ export const board = (state = initialState, action) => {
         });
       } else {
           // check if the click is valid etc..
-          if (state.chess.getPossibleMoves(action.index)) {
-            console.log("TODO: make the move");
+          if (state.chess.getPossibleMoves(state.selectedIndex).includes(action.index)) {
+            return Object.assign({}, state, {
+              selectedIndex: null,
+              chess: state.chess.makeMove(state.selectedIndex, action.index)
+            });
           }
 
           return state;

@@ -30,12 +30,14 @@ function invertColor(color) {
 }
 
 export class ChessState {
-  constructor() {
+  constructor(props) {
     this.squares = ChessState.initPieces();
     this.playerState = [ChessState.initPlayerState(), ChessState.initPlayerState()];
     this.whiteIsNext = true;
     this.turnCount = 0;
     this.possibleMoves = {};
+
+    Object.assign(this, props);
   }
 
   static initPieces() {
@@ -91,6 +93,28 @@ export class ChessState {
 
   belongsToCurrentPlayer(i) {
     return Object.values(this.playerColor()).includes(this.squares[i]);
+  }
+
+  // this returns a new chess state with the move made
+  makeMove(from, to) {
+    console.assert(this.getPossibleMoves(from).includes(to));
+
+    const new_squares = this.squares.slice();
+    new_squares[to] = this.squares[from];
+    new_squares[from] = null;
+
+    const new_props = {
+      squares: new_squares,
+      whiteIsNext: !this.whiteIsNext,
+      turnCount: this.turnCount + 1,
+      possibleMoves: {}
+    }
+
+    return new ChessState(new_props);
+  }
+
+  freeField(i) {
+    return this.squares[i] === null;
   }
 
   handleClick(i) {
