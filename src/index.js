@@ -4,7 +4,8 @@ import Provider from 'react-redux';
 import { createStore } from 'redux';
 import rootReducer from './reducers'
 import Board from './components/board';
-import BoardController from './containers/boardController'
+import Game from './components/game';
+import GameController from './containers/gameController'
 import { BLACK, WHITE } from './pieces';
 import { possibleMoves, getRow, getCol, getColor } from './chess_helpers.js';
 import './index.css'
@@ -12,7 +13,7 @@ import './index.css'
 const store = createStore(rootReducer,
 window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
-class Game extends React.Component {
+class GameOld extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -149,12 +150,7 @@ function calculateWinner(squares, board_size) {
   return null;
 }
 
-// ========================================
-//  <Game
-//    board_size={8}
-//  />
-
 ReactDOM.render(
-  <BoardController store={store} />,
+  <GameController store={store} />,
   document.getElementById('root')
 );

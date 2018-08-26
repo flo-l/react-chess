@@ -16,7 +16,7 @@ function Square(props) {
 
 // this renders a n times n grid with Square
 export default function Board(props) {
-  const size = 8;
+  const size = props.size;
   const rows = [...Array(size).keys()].map((_, row) => {
     return(
       <React.StrictMode>

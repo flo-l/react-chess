@@ -1,17 +1,19 @@
 import { connect } from 'react-redux'
-import Board from '../components/board'
+import Game from '../components/game'
 import { clickSquare } from '../actions'
 
 const mapStateToProps = state => {
   let marked = Array(64).fill(null);
   if (state.clickSquareReducer.idx !== null) {
-    marked[state.clickSquareReducer.idx] = 'selected'
+    marked[state.clickSquareReducer.idx] = 'selected';
   }
 
   return {
+    board_size: 8,
+    squares: Array(64).fill(null),
     markedIndices: marked,
-    squares: Array(64).fill(null)
-  }
+    status: 'status text'
+  };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -20,9 +22,9 @@ const mapDispatchToProps = dispatch => {
   };
 }
 
-const BoardController = connect(
+const GameController = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Board)
+)(Game);
 
-export default BoardController;
+export default GameController;
