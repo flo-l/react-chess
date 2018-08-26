@@ -35,7 +35,7 @@ export class ChessState {
     this.playerState = [ChessState.initPlayerState(), ChessState.initPlayerState()];
     this.whiteIsNext = true;
     this.turnCount = 0;
-    this.possibleMoves = [];
+    this.possibleMoves = {};
   }
 
   static initPieces() {
@@ -63,39 +63,17 @@ export class ChessState {
   }
 
   getPossibleMoves(i) {
-    return possibleMoves(Object.assign({
-        squares: this.squares,
-        playerColor: this.playerColor(),
-      },
-      this.currentPlayerState()
-    ), i);
-  }
-
-  render() {
-    const history = this.state.history;
-    const current = history[this.state.turnCount];
-    const winner = this.calculateWinner(current.squares, this.props.board_size);
-    const selected = this.state.selected;
-    const possible_moves = this.state.possibleMoves;
-
-    let status;
-    if (winner && winner.winner) {
-      status = 'Winner: ' + winner.winner;
-    } else if (winner && winner.draw) {
-      status = 'Draw';
-    } else {
-      status = 'Next player: ' + this.playerString();
+    if (!this.possibleMoves.hasOwnProperty(i)) {
+      this.possibleMoves[i] = possibleMoves(Object.assign({
+          squares: this.squares,
+          playerColor: this.playerColor(),
+        },
+        this.currentPlayerState()
+      ),
+      i);
     }
 
-    let marked_indices = {};
-    if (winner && winner.indices) {
-      marked_indices = winner.indices;
-    } else if (selected !== null) {
-      marked_indices[selected] = "selected";
-      possible_moves.forEach(move => {
-        marked_indices[move] = "possible_move"
-      });
-    }
+    return this.possibleMoves[i];
   }
 
   playerColor() {
@@ -109,6 +87,10 @@ export class ChessState {
   currentPlayerState() {
     let i = this.whiteIsNext ? 0 : 1;
     return this.playerState[i];
+  }
+
+  belongsToCurrentPlayer(i) {
+    return Object.values(this.playerColor()).includes(this.squares[i]);
   }
 
   handleClick(i) {
