@@ -69,7 +69,7 @@ export class ChessState {
 
   getPossibleMoves(i) {
     if (!this.possibleMoves.hasOwnProperty(i)) {
-      this.possibleMoves[i] = possibleMoves(this, i);
+      this.possibleMoves[i] = possibleMoves(this, i, true);
     }
 
     return this.possibleMoves[i];
@@ -107,23 +107,31 @@ export class ChessState {
     return Object.values(this.playerColor()).includes(this.squares[i]);
   }
 
-  isUnderAttack(i) {
-    const ownColor = this.playerColor();
+  // by enemy of ownColor
+  isUnderAttack(i, ownColor = this.playerColor()) {
     const fictionalSquares = this.squares.slice();
     fictionalSquares[i] = ownColor.PAWN;
     const fictionalState = this.setNextPlayer({squares: fictionalSquares});
 
     return fictionalState.squares
       .filter((_, idx) => enemyPiece(fictionalState.squares, idx, ownColor))
-      .map((_, i) => possibleMoves(fictionalState, i))
+      .map((_, i) => possibleMoves(fictionalState, i, false))
       .reduce((acc, x) => acc.concat(x), [])
       .some(x => x === i);
   }
 
+  // king of ownColor is being attack
+  isCheck(ownColor = this.playerColor()) {
+    const king = ownColor.KING;
+
+    return this.squares
+      .map((x,i) => [x,i])
+      .filter(x => x[0] === king)
+      .every(x => !this.isUnderAttack(x[1], ownColor));
+  }
+
   // this returns a new chess state with the move made
   makeMove(from, to) {
-    console.assert(this.getPossibleMoves(from).includes(to));
-
     const new_squares = this.squares.slice();
     new_squares[to] = this.squares[from];
     new_squares[from] = null;
@@ -200,10 +208,19 @@ export class ChessState {
 }
 
 // returns the possible moves for a piece
-function possibleMoves(chessState, idx) {
+function possibleMoves(chessState, idx, checkForMate) {
   const piece = chessState.squares[idx];
   if (piece) {
-    return moveCheck[piece](chessState, idx);
+    return moveCheck[piece](chessState, idx).filter(move => {
+      if (checkForMate) {
+        const new_state = chessState.makeMove(idx, move);
+        console.log(idx, move, !new_state.isCheck(chessState.playerColor()));
+
+        return new_state.isCheck(chessState.playerColor());
+      } else {
+        return true;
+      }
+    });
   } else {
     return [];
   }
