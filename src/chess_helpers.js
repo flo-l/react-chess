@@ -32,7 +32,7 @@ function invertColor(color) {
 export class ChessState {
   constructor() {
     this.squares = ChessState.initPieces();
-    this.playerState = [this.initPlayerState(), this.initPlayerState()];
+    this.playerState = [ChessState.initPlayerState(), ChessState.initPlayerState()];
     this.whiteIsNext = true;
     this.turnCount = 0;
     this.possibleMoves = [];
@@ -54,12 +54,21 @@ export class ChessState {
     });
   }
 
-  initPlayerState() {
+  static initPlayerState() {
     return {
       kingMoved: false,
       leftRookMoved: false,
       rightRookMoved: false,
     }
+  }
+
+  getPossibleMoves(i) {
+    return possibleMoves(Object.assign({
+        squares: this.squares,
+        playerColor: this.playerColor(),
+      },
+      this.currentPlayerState()
+    ), i);
   }
 
   render() {
@@ -90,11 +99,16 @@ export class ChessState {
   }
 
   playerColor() {
-    return this.state.whiteIsNext ? WHITE : BLACK;
+    return this.whiteIsNext ? WHITE : BLACK;
   }
 
   playerString() {
     return this.playerColor() === WHITE ? 'White' : 'Black';
+  }
+
+  currentPlayerState() {
+    let i = this.whiteIsNext ? 0 : 1;
+    return this.playerState[i];
   }
 
   handleClick(i) {
@@ -145,8 +159,8 @@ export class ChessState {
 }
 
 // returns the possible moves for a piece by a player
-// gamestate: {squares: squares, kingMoved: Bool, leftRookMoved: Bool, rightRookMoved, playerColor: WHITE or BLACK}
-export function possibleMoves(gameState, idx) {
+// gamestate: {squares: squares, kingMoved: Bool, leftRookMoved: Bool, rightRookMoved: Bool, playerColor: WHITE or BLACK}
+function possibleMoves(gameState, idx) {
   const squares = gameState.squares;
   const possible_pieces = gameState.playerColor;
   const piece = squares[idx];

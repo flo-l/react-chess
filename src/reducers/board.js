@@ -15,7 +15,7 @@ export const board = (state = initialState, action) => {
       } else {
           // check if the click is valid etc..
           return Object.assign({}, state, {
-            selectedIndex: null
+            selectedIndex: action.index
           });
       }
     default:
