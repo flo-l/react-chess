@@ -1,8 +1,9 @@
 {
-  "name": "first-test",
+  "name": "react-chess",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "gh-pages": "^1.2.0",
     "permutation-engine": "^0.1.5",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
@@ -23,5 +24,5 @@
   "devDependencies": {
     "webpack-command": "^0.4.1"
   },
-  "homepage": "https://flo-l.github.io/react-tictactoe"
+  "homepage": "https://flo-l.github.io/react-chess"
 }
