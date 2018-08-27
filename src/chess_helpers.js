@@ -45,9 +45,9 @@ export class ChessState {
     const squares = Array(board_size*board_size).fill(null).map((_,idx) => {
       const row = getRow(idx);
       const col = getCol(idx);
-      const pieces = ['ROOK', 'KNIGHT', 'BISHOP', 'QUEEN', 'KING', 'BISHOP', 'KNIGHT', 'ROOK'];
+      const pieces = ['ROOK', 'KNIGHT', 'BISHOP', 'KING', 'QUEEN', 'BISHOP', 'KNIGHT', 'ROOK'];
 
-      if (col === 0) { return BLACK[pieces.reverse()[row]]; }
+      if (col === 0) { return BLACK[pieces[row]]; }
       if (col === 1) { return BLACK.PAWN; }
       if (col === 6) { return WHITE.PAWN; }
       if (col === 7) { return WHITE[pieces[row]]; }
