@@ -14,6 +14,20 @@ function Square(props) {
   );
 }
 
+function VerticalDescription(props) {
+  return (
+    <div className="board-row">
+      <div className="description-square"></div>
+        {
+          [...Array(8).keys()].reverse().map(i => {
+            return (<div className={"square description-" + props.pos}>{i + 1}</div>)
+          })
+        }
+      <div className="description-square"></div>  
+    </div>
+  );
+}
+
 // this renders a n times n grid with Square
 export default function Board(props) {
   const size = props.size;
@@ -21,6 +35,7 @@ export default function Board(props) {
     return(
       <React.StrictMode>
       <div key={row} className="board-row">
+        <div className="square description-left">{(17-row).toString(18)}</div>
         {
           [...Array(size).keys()]
           .map((_, col) => {
@@ -44,6 +59,7 @@ export default function Board(props) {
             />;
           })
         }
+        <div className="square description-right">{(17-row).toString(18)}</div>
       </div>
     </React.StrictMode>
     );
@@ -51,7 +67,9 @@ export default function Board(props) {
 
   return (
     <div>
+      <VerticalDescription pos="top" />
       {rows}
+      <VerticalDescription pos="bottom" />
     </div>
   );
 }
