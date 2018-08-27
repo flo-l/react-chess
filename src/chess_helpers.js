@@ -55,7 +55,7 @@ export class ChessState {
       return null;
     });
 
-    return squares.map(x => {if (x === BLACK.ROOK || x === WHITE.ROOK || x === BLACK.KING || x === WHITE.KING) { return x } else { return null }});
+    return squares;
   }
 
   static initPlayerState() {
@@ -69,7 +69,7 @@ export class ChessState {
 
   getPossibleMoves(i) {
     if (!this.possibleMoves.hasOwnProperty(i)) {
-      this.possibleMoves[i] = possibleMoves(this, i, true);
+      this.possibleMoves[i] = possibleMoves(this, i);
     }
 
     return this.possibleMoves[i];
@@ -116,7 +116,7 @@ export class ChessState {
     return fictionalState.squares
       .map((_, idx) => idx)
       .filter(idx => enemyPiece(fictionalState.squares, idx, ownColor))
-      .map(idx => possibleMoves(fictionalState, idx, false))
+      .map(idx => possibleMovesWithoutCheck(fictionalState, idx))
       .reduce((acc, ids) => acc.concat(ids), [])
       .some(x => x === i);
   }
@@ -128,7 +128,7 @@ export class ChessState {
     return this.squares
       .map((x,i) => [x,i])
       .filter(x => x[0] === king)
-      .every(x => !this.isUnderAttack(x[1], invertColor(ownColor)));
+      .some(x => this.isUnderAttack(x[1], ownColor));
   }
 
   // this returns a new chess state with the move made
@@ -209,17 +209,40 @@ export class ChessState {
 }
 
 // returns the possible moves for a piece
-function possibleMoves(chessState, idx, checkForMate) {
+function possibleMoves(chessState, idx) {
+  const row = getRow(idx);
+  const col = getCol(idx);
+  const squares = chessState.squares;
+  const playerState = chessState.currentPlayerState();
+
+  const possible_moves = possibleMovesWithoutCheck(chessState, idx);
+
+  // castling
+  if (squares[idx] === WHITE.KING || squares[idx] === BLACK.KING) {
+    if (!playerState.kingMoved && !playerState.row0RookMoved && !chessState.isCheck()) {
+      const fields_free = ![...Array(row - 1).keys()].some(i => !freeField(squares, getIndex(i + 1, col)));
+      if (fields_free && !chessState.isUnderAttack(getIndex(row - 1, col))) {
+        possible_moves.push(getIndex(row - 2, col));
+      }
+    }
+
+    if (!playerState.kingMoved && !playerState.row7RookMoved && !chessState.isCheck()) {
+      const fields_free = ![...Array(8 - row - 2).keys()].some(i => !freeField(squares, getIndex(i + row + 1, col)));
+      if (fields_free && !chessState.isUnderAttack(getIndex(row + 1, col))) {
+        possible_moves.push(getIndex(row + 2, col));
+      }
+    }
+  }
+
+  return possible_moves
+    .filter(move => !chessState.makeMove(idx, move).isCheck(chessState.playerColor()));
+}
+
+// without check check (haha) and castling
+function possibleMovesWithoutCheck(chessState, idx) {
   const piece = chessState.squares[idx];
   if (piece) {
-    return moveCheck[piece](chessState, idx).filter(move => {
-      if (checkForMate) {
-        const new_state = chessState.makeMove(idx, move);
-        return new_state.isCheck(chessState.playerColor());
-      } else {
-        return true;
-      }
-    });
+    return moveCheck[piece](chessState, idx);
   } else {
     return [];
   }
@@ -347,6 +370,7 @@ function queenPossibleMoves(chessState, idx) {
   return possible_moves;
 }
 
+// without castling
 function kingPossibleMoves(chessState, idx) {
   const squares = chessState.squares;
   const row = getRow(idx);
@@ -354,7 +378,7 @@ function kingPossibleMoves(chessState, idx) {
   const playerColor = getColor(squares[idx]);
   const playerState = chessState.currentPlayerState();
 
-  const moves = [
+  return [
     getIndex(row + 0, col + 1),
     getIndex(row + 1, col + 1),
     getIndex(row + 1, col + 0),
@@ -364,23 +388,6 @@ function kingPossibleMoves(chessState, idx) {
     getIndex(row - 1, col + 0),
     getIndex(row - 1, col + 1),
   ].filter(idx => idx !== undefined && !ownPiece(squares, idx, playerColor));
-
-  // castling
-  if (!playerState.kingMoved && !playerState.row0RookMoved && !chessState.isCheck()) {
-    const fields_free = ![...Array(row - 1).keys()].some(i => !freeField(squares, getIndex(i + 1, col)));
-    if (fields_free && chessState.isUnderAttack(getIndex(row + 1, col))) {
-      moves.push(getIndex(row - 2, col));
-    }
-  }
-
-  if (!playerState.kingMoved && !playerState.row7RookMoved && !chessState.isCheck()) {
-    const fields_free = ![...Array(8 - row - 2).keys()].some(i => !freeField(squares, getIndex(i + row + 1, col)));
-    if (fields_free && chessState.isUnderAttack(getIndex(row - 1, col))) {
-      moves.push(getIndex(row + 2, col));
-    }
-  }
-
-  return moves;
 }
 
 function withDeltas(squares, idx, row_dir, col_dir) {
@@ -391,7 +398,7 @@ function withDeltas(squares, idx, row_dir, col_dir) {
 
   for (let x = 1; x < 8; x++) {
     const i = getIndex(row + x * row_dir, col + x * col_dir);
-    if (!i || ownPiece(squares, i, playerColor)) { break; }
+    if (i === undefined || ownPiece(squares, i, playerColor)) { break; }
     possible_moves.push(i);
     if (enemyPiece(squares, i, playerColor)) { break; }
   }
