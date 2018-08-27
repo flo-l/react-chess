@@ -12,11 +12,22 @@ const mapStateToProps = state => {
     }
   }
 
+  let status;
+  if (state.board.winner !== null) {
+    if (state.board.winner === 'DRAW') {
+      status = "It's a draw!"
+    } else {
+      status = state.board.chess.enemyString() + " player won.";
+    }
+  } else {
+    status = "Next player is " + state.board.chess.playerString();
+  }
+
   return {
     board_size: 8,
     squares: state.board.chess.squares,
     markedIndices: marked,
-    status: "Next player is " + state.board.chess.playerString()
+    status: status,
   };
 };
 

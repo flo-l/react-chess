@@ -87,6 +87,10 @@ export class ChessState {
     return this.whiteIsNext ? 'white' : 'black';
   }
 
+  enemyString() {
+    return this.whiteIsNext ? 'black' : 'white';
+  }
+
   currentPlayerNumber() {
     return this.whiteIsNext ? 0 : 1;
   }
@@ -191,7 +195,22 @@ export class ChessState {
   }
 
   calculateWinner() {
-    return false;
+    const squares = this.squares;
+    const ownColor = this.playerColor();
+
+    const move_possible = this.squares
+      .map((_, i) => i)
+      .filter(i => ownPiece(squares, i, ownColor))
+      .map(i => this.getPossibleMoves(i))
+      .some(moves => moves.length > 0);
+
+    if (this.isCheck() && !move_possible) {
+      return this.enemyColor();
+    } else if (!move_possible)  {
+      return 'DRAW';
+    } else {
+      return null;
+    }
   }
 
   // sets next player without making any move
@@ -376,7 +395,6 @@ function kingPossibleMoves(chessState, idx) {
   const row = getRow(idx);
   const col = getCol(idx);
   const playerColor = getColor(squares[idx]);
-  const playerState = chessState.currentPlayerState();
 
   return [
     getIndex(row + 0, col + 1),
