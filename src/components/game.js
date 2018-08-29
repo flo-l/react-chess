@@ -3,6 +3,7 @@ import Board from './board';
 
 export default function Game(props) {
   return (
+    <div id="game-container">
     <div className="game">
       <Board
         size={props.board_size}
@@ -13,6 +14,7 @@ export default function Game(props) {
       <div className="game-info">
         <div>{props.status}</div>
       </div>
+    </div>
     </div>
   );
 }
