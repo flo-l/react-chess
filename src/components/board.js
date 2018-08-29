@@ -15,16 +15,17 @@ function Square(props) {
 }
 
 function VerticalDescription(props) {
+  const square = (<div className="description description-square"></div>);
+  const descriptions = [...Array(8).keys()].reverse().map(i => {
+    return (<div className={"description description-" + props.pos}>{i + 1}</div>)
+  });
+
   return (
-    <div className="board-row">
-      <div className="description-square"></div>
-        {
-          [...Array(8).keys()].reverse().map(i => {
-            return (<div className={"square description-" + props.pos}>{i + 1}</div>)
-          })
-        }
-      <div className="description-square"></div>  
-    </div>
+    <React.Fragment>
+      {square}
+      {descriptions}
+      {square}
+    </React.Fragment>
   );
 }
 
@@ -34,8 +35,7 @@ export default function Board(props) {
   const rows = [...Array(size).keys()].map((_, row) => {
     return(
       <React.StrictMode>
-      <div key={row} className="board-row">
-        <div className="square description-left">{(17-row).toString(18)}</div>
+        <div className="description description-left">{(17-row).toString(18)}</div>
         {
           [...Array(size).keys()]
           .map((_, col) => {
@@ -59,14 +59,13 @@ export default function Board(props) {
             />;
           })
         }
-        <div className="square description-right">{(17-row).toString(18)}</div>
-      </div>
+        <div className="description description-right">{(17-row).toString(18)}</div>
     </React.StrictMode>
     );
   });
 
   return (
-    <div>
+    <div class="game-board">
       <VerticalDescription pos="top" />
       {rows}
       <VerticalDescription pos="bottom" />
