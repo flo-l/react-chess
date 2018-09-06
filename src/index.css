@@ -8,7 +8,27 @@ div#root {
   padding-top: 5%;
 }
 
+.game {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100;
+  margin: 2% 30% 0%;
+}
+
+div.game-board-outer {
+  position: relative;
+  padding-bottom: 100%;
+  width: 100%;
+}
+
 .game-board {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: grid;
   grid-template-columns: auto repeat(8, 1fr) auto;
   grid-template-rows:    auto repeat(8, 1fr) auto;
@@ -25,6 +45,9 @@ div#root {
   text-align: center;
   display: block;
   width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .description:before {
@@ -59,15 +82,6 @@ div#root {
 
 .square:focus {
   outline: none;
-}
-
-.game {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 100;
-  height: 100%;
 }
 
 .game-info {

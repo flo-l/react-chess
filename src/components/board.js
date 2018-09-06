@@ -65,10 +65,12 @@ export default function Board(props) {
   });
 
   return (
+    <div class="game-board-outer">
     <div class="game-board">
       <VerticalDescription pos="top" />
       {rows}
       <VerticalDescription pos="bottom" />
+    </div>
     </div>
   );
 }
