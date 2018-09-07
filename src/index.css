@@ -18,16 +18,46 @@ div#root {
   margin: 2% 5% 0%;
 }
 
+.game-board-inner {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows:    repeat(8, 1fr);
+  border: 1px solid #c4c4c4;
+}
+
 .game-board-outer {
   position: relative;
   padding-bottom: 100%;
   width: 100%;
+  grid-area: s;
+}
+
+.game-board-outermost {
+  width: 100%;
+  display: grid;
+  grid-template-areas:
+              ". . . . . . . . . ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". . . . . . . . . .";
+  grid-template-columns: auto repeat(8, 1fr) auto;
+  grid-template-rows:    auto repeat(8, 1fr) auto;
 }
 
 @media screen and (orientation:landscape) {
-  .game-board-outer {
+  .game-board-outermost {
     width: 50%;
-    padding-bottom: 50%;
   }
 
   div#root {
@@ -39,18 +69,6 @@ div#root {
  .game {
    margin: 2% 15% 0%;
  }
-}
-
-.game-board-inner {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows:    repeat(8, 1fr);
-  border: 1px solid #c4c4c4;
 }
 
 .status {
@@ -67,18 +85,13 @@ svg {
   cursor: default;
 }
 
-.description:before {
-  display: inline-block;
-  content: '';
-  height: 100%;
-  vertical-align: middle;
-}
-
 .description {
   font-size: 1.2em;
   text-align: center;
   vertical-align: middle;
   margin: .3em;
+  align-self: center;
+  justify-self: center;
 }
 
 .selected {

@@ -17,7 +17,7 @@ function Square(props) {
 function VerticalDescription(props) {
   const square = (<div className="description description-square"></div>);
   const descriptions = [...Array(8).keys()].reverse().map(i => {
-    return (<div className={"description description-" + props.pos}>{i + 1}</div>)
+    return (<div className={"description"}>{i + 1}</div>)
   });
 
   return (
@@ -25,6 +25,23 @@ function VerticalDescription(props) {
       {square}
       {descriptions}
       {square}
+    </React.Fragment>
+  );
+}
+
+function HorizontalDescriptions(props) {
+  const descriptions = [...Array(8).keys()].map(i => {
+    return (
+      <React.Fragment>
+        <div className={"description"}>{String.fromCharCode('a'.charCodeAt() + i)}</div>
+        <div className={"description"}>{String.fromCharCode('a'.charCodeAt() + i)}</div>
+      </React.Fragment>
+    );
+  });
+
+  return (
+    <React.Fragment>
+      {descriptions}
     </React.Fragment>
   );
 }
@@ -73,6 +90,12 @@ function BoardInner(props) {
 // this renders a n times n grid with Square
 export default function Board(props) {
   return (
-    <BoardInner {...props}/>
+    <div class="game-board-outermost">
+      <BoardInner {...props}/>
+
+      <VerticalDescription />
+      <HorizontalDescriptions />
+      <VerticalDescription />
+    </div>
   );
 }
