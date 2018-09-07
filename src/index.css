@@ -15,19 +15,30 @@ div#root {
   align-items: center;
   justify-content: center;
   width: 100;
-  margin: 2% 0% 0%;
+  margin: 2% 5% 0%;
 }
 
-@media only screen and (min-width: 780px) {
-  .game {
-    margin: 2% 30% 0%;
-  }
-}
-
-div.game-board-outer {
+.game-board-outer {
   position: relative;
   padding-bottom: 100%;
   width: 100%;
+}
+
+@media screen and (orientation:landscape) {
+  .game-board-outer {
+    width: 50%;
+    padding-bottom: 50%;
+  }
+
+  div#root {
+    padding-top: 0%;
+  }
+}
+
+@media only screen and (min-width: 780px) {
+ .game {
+   margin: 2% 15% 0%;
+ }
 }
 
 .game-board {
@@ -87,6 +98,6 @@ div.game-board-outer {
 }
 
 .game-info {
-  margin-top: 2em;
+  margin: 2em;
   font-size: 1.4em;
 }
