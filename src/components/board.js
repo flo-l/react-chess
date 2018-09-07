@@ -9,7 +9,7 @@ function Square(props) {
     <svg viewBox="0 0 14 14"
       className={classNames.join(' ')}
       onClick={props.onClick}>
-      <text x="50%" y="50%" dy="0.3em" font-size="9" alignment-baseline="middle" text-anchor="middle">{props.value}</text>
+      <text x="50%" y="50%" font-size="9" dominant-baseline="middle" text-anchor="middle">{props.value}</text>
     </svg>
   );
 }

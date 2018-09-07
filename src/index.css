@@ -62,6 +62,10 @@ div#root {
   width: 100%;
 }
 
+svg {
+  cursor: default;
+}
+
 .description:before {
   display: inline-block;
   content: '';
