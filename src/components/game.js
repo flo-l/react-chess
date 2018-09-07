@@ -10,10 +10,10 @@ export default function Game(props) {
         onClick={(i) => props.onClick(i)}
         markedIndices={props.markedIndices}
       />
+
+    <div className="game-info">
+      <div>{props.status}</div>
+    </div>
     </div>
   );
 }
-
-//      <div className="game-info">
-//        <div>{props.status}</div>
-//      </div>
