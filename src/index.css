@@ -35,7 +35,7 @@ div#root {
   }
 }
 
-@media only screen and (pointer:coarse), (hover:none), (hover:on-demand) {
+@media (pointer:coarse), (hover:none), (hover:on-demand) {
  .game {
    margin: 2% 15% 0%;
  }
@@ -60,7 +60,6 @@ div#root {
 .square {
   border: .02em solid #999;
   width: 100%;
-  height: 100%;
 }
 
 .description:before {
