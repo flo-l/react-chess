@@ -51,8 +51,8 @@ div#root {
               ". s s s s s s s s ."
               ". s s s s s s s s ."
               ". . . . . . . . . .";
-  grid-template-columns: auto repeat(8, 1fr) auto;
-  grid-template-rows:    auto repeat(8, 1fr) auto;
+  grid-template-columns: 0.4fr repeat(8, 1fr) 0.4fr;
+  grid-template-rows:    0.5fr repeat(8, 1fr) 0.5fr;
 }
 
 @media screen and (orientation:landscape) {
@@ -86,12 +86,16 @@ svg {
 }
 
 .description {
-  font-size: 1.2em;
-  text-align: center;
-  vertical-align: middle;
-  margin: .3em;
   align-self: center;
   justify-self: center;
+}
+
+.description-vertical {
+  height: 100%;
+}
+
+.description-horizontal {
+  width: 100%;
 }
 
 .selected {

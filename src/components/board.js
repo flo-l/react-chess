@@ -14,10 +14,15 @@ function Square(props) {
   );
 }
 
-function VerticalDescription(props) {
+function HorizontalDescriptions(props) {
   const square = (<div className="description description-square"></div>);
   const descriptions = [...Array(8).keys()].reverse().map(i => {
-    return (<div className={"description"}>{i + 1}</div>)
+    return (
+      <svg viewBox="0 0 14 5"
+        className="description description-horizontal">
+        <text x="50%" y="50%" font-size="4" dominant-baseline="middle" text-anchor="middle">{i + 1}</text>
+      </svg>
+    )
   });
 
   return (
@@ -29,12 +34,21 @@ function VerticalDescription(props) {
   );
 }
 
-function HorizontalDescriptions(props) {
+function VerticalDescription(props) {
+  return (
+    <svg viewBox="0 0 5 14"
+      className="description description-vertical">
+      <text x="50%" y="50%" font-size="4" dominant-baseline="middle" text-anchor="middle">{String.fromCharCode('a'.charCodeAt() + props.i)}</text>
+    </svg>
+  )
+}
+
+function VerticalDescriptions(props) {
   const descriptions = [...Array(8).keys()].map(i => {
     return (
       <React.Fragment>
-        <div className={"description"}>{String.fromCharCode('a'.charCodeAt() + i)}</div>
-        <div className={"description"}>{String.fromCharCode('a'.charCodeAt() + i)}</div>
+        <VerticalDescription i={i}/>
+        <VerticalDescription i={i}/>
       </React.Fragment>
     );
   });
@@ -93,9 +107,9 @@ export default function Board(props) {
     <div class="game-board-outermost">
       <BoardInner {...props}/>
 
-      <VerticalDescription />
       <HorizontalDescriptions />
-      <VerticalDescription />
+      <VerticalDescriptions />
+      <HorizontalDescriptions />
     </div>
   );
 }
