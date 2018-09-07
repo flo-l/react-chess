@@ -6,11 +6,12 @@ function Square(props) {
   if (props.background)  { classNames.push(props.background); }
 
   return (
-    <button
+    <svg width="14px" height="14px"
+      viewBox="0 0 14 14"
       className={classNames.join(' ')}
       onClick={props.onClick}>
-      {props.value}
-    </button>
+      <text x="50%" y="50%" dy="0.3em" font-size="9" alignment-baseline="middle" text-anchor="middle">{props.value}</text>
+    </svg>
   );
 }
 
