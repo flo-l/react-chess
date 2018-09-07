@@ -20,7 +20,7 @@ function HorizontalDescriptions(props) {
     return (
       <svg viewBox="0 0 14 5"
         className="description description-horizontal">
-        <text x="50%" y="50%" font-size="4" dominant-baseline="middle" text-anchor="middle">{i + 1}</text>
+        <text x="50%" y="50%" font-size="3.5" dominant-baseline="middle" text-anchor="middle">{i + 1}</text>
       </svg>
     )
   });
@@ -38,7 +38,7 @@ function VerticalDescription(props) {
   return (
     <svg viewBox="0 0 5 14"
       className="description description-vertical">
-      <text x="50%" y="50%" font-size="4" dominant-baseline="middle" text-anchor="middle">{String.fromCharCode('a'.charCodeAt() + props.i)}</text>
+      <text x="50%" y="50%" font-size="3.5" dominant-baseline="middle" text-anchor="middle">{String.fromCharCode('a'.charCodeAt() + props.i)}</text>
     </svg>
   )
 }
