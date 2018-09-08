@@ -196,6 +196,31 @@ export class ChessState {
     return this.setNextPlayer(new_props);
   }
 
+  // returns undefined if no promotion is pending, the index of the field where the promotion happens otherwise
+  promotionPending() {
+    const promotion_col = this.whiteIsNext ? 7 : 0;
+    const promotion_index = [...Array(8).keys()]
+      .map(row => getIndex(row, promotion_col))
+      .find(i => this.squares[i] === this.enemyColor().PAWN);
+
+    return promotion_index;
+  }
+
+  // returns a new chess state with the promotion executed
+  executePromotion(piece) {
+    const promotion_index = this.promotionPending();
+    console.assert(promotion_index !== undefined);
+    const new_squares = this.squares.slice();
+    new_squares[promotion_index] = piece;
+
+    const new_props = {
+      squares: new_squares,
+      possibleMoves: {}
+    }
+
+    return new ChessState(Object.assign({}, this, new_props));
+  }
+
   calculateWinner() {
     const squares = this.squares;
     const ownColor = this.playerColor();
@@ -301,14 +326,14 @@ function pawnPossibleMoves(chessState, idx) {
 
   // normal movement
   const i = getIndex(row,col+direction);
-  if (i && freeField(squares, i)) {
+  if (i !== undefined && freeField(squares, i)) {
     possible_moves.push(getIndex(row,col+direction));
   }
 
   // double move @ start
   if ((direction ===  -1 && col === 6) || (direction === 1 && col === 1)) {
     const i = getIndex(row,col + direction*2);
-    if (i && freeField(squares, i)) {
+    if (i !== undefined && freeField(squares, i)) {
       possible_moves.push(i);
     }
   }
@@ -347,7 +372,7 @@ function knightPossibleMoves(chessState, idx) {
     ];
   })
   .reduce((acc, val) => acc.concat(val), [])
-  .filter(idx => idx && !ownPiece(squares, idx, playerColor));
+  .filter(idx => idx !== undefined && !ownPiece(squares, idx, playerColor));
 }
 
 function bishopPossibleMoves(chessState, idx) {

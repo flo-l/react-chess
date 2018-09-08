@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Game from '../components/game'
-import { clickSquare } from '../actions'
+import { clickSquare, promotionChosen } from '../actions'
 
 const mapStateToProps = state => {
   let marked = Array(64).fill(null);
@@ -29,12 +29,14 @@ const mapStateToProps = state => {
     markedIndices: marked,
     status: status,
     flipDirection: state.board.flipDirection,
+    enemyColor: state.board.chess.enemyColor(),
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onClick: (idx) => dispatch(clickSquare(idx))
+    onClick: (idx) => dispatch(clickSquare(idx)),
+    promotionChosen: (piece) => dispatch(promotionChosen(piece)),
   };
 }
 
