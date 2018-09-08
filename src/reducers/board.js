@@ -4,6 +4,7 @@ const initialState = {
   chess: new ChessState(),
   selectedIndex: null,
   winner: null,
+  flipDirection: true,
 };
 
 export const board = (state = initialState, action) => {

@@ -9,6 +9,7 @@ export default function Game(props) {
         squares={props.squares}
         onClick={(i) => props.onClick(i)}
         markedIndices={props.markedIndices}
+        flipDirection={props.flipDirection}
       />
 
     <div className="game-info">

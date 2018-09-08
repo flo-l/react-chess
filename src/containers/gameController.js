@@ -28,6 +28,7 @@ const mapStateToProps = state => {
     squares: state.board.chess.squares,
     markedIndices: marked,
     status: status,
+    flipDirection: state.board.flipDirection,
   };
 };
 
