@@ -26,7 +26,9 @@ div#root {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows:    repeat(8, 1fr);
-  border: 1px solid #c4c4c4;
+  grid-gap: 1px;
+  border: 1px solid #7c3e3e;
+  background: #7c3e3e;
 }
 
 .game-board-outer {
@@ -104,17 +106,19 @@ svg {
 }
 
 .selected {
+  _border: 1px solid black;
   background: #e0df63;
 }
 
 .possible_move {
+  _border: 1px solid black;
   background: #80a0ea;
 }
 
 .black {
-  background: #a2a2a2;
+  background: #997c3f;
 }
 
 .white {
-  background: white;
+  background: #e4e1b8;
 }
