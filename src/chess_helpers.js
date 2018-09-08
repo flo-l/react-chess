@@ -138,26 +138,28 @@ export class ChessState {
   // this returns a new chess state with the move made
   makeMove(from, to) {
     const new_squares = this.squares.slice();
+    const row = getRow(from);
+    const col = getCol(from);
+
+    // move pieces
     new_squares[to] = this.squares[from];
     new_squares[from] = null;
 
+    // create new player state
     const new_player_state = JSON.parse(JSON.stringify(this.playerState)); // well, it's a hack for deep copying..
 
     // update playerState
-    const row = getRow(from);
-    const col = getCol(from);
+    // 1. check if rooks or the king were moved or captured
+    new_player_state[0].row0RookMoved = new_player_state[0].row0RookMoved || new_squares[getIndex(0,7)] !== WHITE.ROOK;
+    new_player_state[0].row7RookMoved = new_player_state[0].row7RookMoved || new_squares[getIndex(7,7)] !== WHITE.ROOK;
+    new_player_state[0].kingMoved     = new_player_state[0].kingMoved     || new_squares[getIndex(3,7)] !== WHITE.KING;
+
+    new_player_state[1].row0RookMoved = new_player_state[1].row0RookMoved || new_squares[getIndex(0,0)] !== BLACK.ROOK;
+    new_player_state[1].row7RookMoved = new_player_state[1].row7RookMoved || new_squares[getIndex(7,0)] !== BLACK.ROOK;
+    new_player_state[1].kingMoved     = new_player_state[1].kingMoved     || new_squares[getIndex(3,0)] !== BLACK.KING;
+
+    // 2. save if pawn was moved
     const current_player_state = new_player_state[this.currentPlayerNumber()];
-    if (this.squares[from] === WHITE.ROOK || this.squares[from] === BLACK.ROOK) {
-      const first_col = this.playerColor() === WHITE ? 7 : 0;
-
-      if (row === 0 && col === first_col)
-      {
-        current_player_state.row0RookMoved = true;
-      } else if (row === 7 && col === first_col) {
-        current_player_state.row7RookMoved = true;
-      }
-    }
-
     if ((this.squares[from] === WHITE.PAWN && col === 6) || (this.squares[from] === BLACK.PAWN && col === 1)) {
       current_player_state.pawnMoved = row;
     } else {
