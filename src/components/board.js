@@ -8,6 +8,7 @@ function Square(props) {
   return (
     <svg viewBox="0 0 14 14"
       className={classNames.join(' ')}
+      fontFamily="Century Gothic"
       onClick={props.onClick}>
       <text x="50%" y="50%" fontSize="9" dominantBaseline="middle" textAnchor="middle">{props.value}</text>
     </svg>
@@ -19,6 +20,7 @@ function HorizontalDescriptions(props) {
     return (
       <svg key={i*2}
         viewBox="0 0 14 5"
+        fontFamily="Century Gothic"
         className="description description-horizontal">
         <text x="50%" y="50%" fontSize="3.5" dominantBaseline="middle" textAnchor="middle">{i + 1}</text>
       </svg>
@@ -38,6 +40,7 @@ function VerticalDescription(props) {
   return (
     <svg
       viewBox="0 0 5 14"
+      fontFamily="Century Gothic"
       className="description description-vertical">
       <text x="50%" y="50%" fontSize="3.5" dominantBaseline="middle" textAnchor="middle">{String.fromCharCode('a'.charCodeAt() + props.i)}</text>
     </svg>

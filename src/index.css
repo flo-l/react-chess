@@ -14,7 +14,7 @@ div#root {
   align-items: center;
   justify-content: center;
   width: 100;
-  margin: 2% 15% 0%;
+  margin: 0;
 }
 
 .game-board-inner {
@@ -61,20 +61,15 @@ div#root {
   text-align: center;
 }
 
-/* mobile */
-@media screen and ( (pointer:coarse) or (hover:none) or (hover:on-demand)) {
-  @media (orientation:landscape) {
-    .game {
-      margin-top: 0%;
-    }
-  }
-}
-
 /* desktop */
-@media screen and not((pointer:coarse)) and not((hover:none)) and not((hover:on-demand)) {
- .game {
-   margin: 2% 5% 0%;
- }
+@media screen and (min-width:801px) {
+  .game {
+   margin: 2% 15% 0%;
+  }
+
+  .game-board-outermost {
+    max-width: 700px;
+  }
 }
 
 /* landscape */
