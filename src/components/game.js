@@ -5,6 +5,13 @@ import PromotionPicker from './promotion_picker';
 import '../css/game.css'
 
 export default function Game(props) {
+  let promotion_picker;
+  if (props.promotionVisible) {
+    promotion_picker = (<PromotionPicker
+      promotionChosen={props.promotionChosen}
+      playerColor={props.enemyColor}/>);
+  }
+
   return (
     <div className="game">
       <Board
@@ -17,12 +24,9 @@ export default function Game(props) {
 
     <div className="game-info">
       <div>{props.status}</div>
+      
+      { promotion_picker }
     </div>
-
-    <PromotionPicker
-      promotionChosen={props.promotionChosen}
-      playerColor={props.enemyColor}/>
-
     </div>
   );
 }

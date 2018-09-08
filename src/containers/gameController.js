@@ -19,6 +19,8 @@ const mapStateToProps = state => {
     } else {
       status = state.board.chess.enemyString() + " player won.";
     }
+  } else if (state.board.playerMustChoosePiece) {
+    status = state.board.chess.enemyString() + " player, please choose your promotion piece"
   } else {
     status = "Next player is " + state.board.chess.playerString();
   }
@@ -30,6 +32,7 @@ const mapStateToProps = state => {
     status: status,
     flipDirection: state.board.flipDirection,
     enemyColor: state.board.chess.enemyColor(),
+    promotionVisible: state.board.playerMustChoosePiece !== undefined,
   };
 };
 

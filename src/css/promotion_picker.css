@@ -1,0 +1,11 @@
+.promotion-picker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.promotion-option {
+  justify-self: center;
+  font-size: 3em;
+  display: inline-block;
+}
