@@ -332,8 +332,9 @@ function pawnPossibleMoves(chessState, idx) {
 
   // double move @ start
   if ((direction ===  -1 && col === 6) || (direction === 1 && col === 1)) {
+    const between_index = getIndex(row,col+direction);
     const i = getIndex(row,col + direction*2);
-    if (i !== undefined && freeField(squares, i)) {
+    if (i !== undefined && between_index !== undefined && freeField(squares, between_index) && freeField(squares, i)) {
       possible_moves.push(i);
     }
   }
