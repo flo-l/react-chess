@@ -37,7 +37,7 @@ div#root {
 }
 
 .game-board-outermost {
-  width: 100%;
+  width: 90vh;
   display: grid;
   grid-template-areas:
               ". . . . . . . . . ."
@@ -55,7 +55,7 @@ div#root {
 }
 
 .game-info {
-  width: 35%;
+  width: 20%;
   margin: 2em;
   font-size: 1.4em;
   text-align: center;
@@ -63,19 +63,9 @@ div#root {
 
 /* desktop */
 @media screen and (min-width:801px) {
-  .game {
-   margin: 2% 15% 0%;
-  }
-
   .game-board-outermost {
+    width: 50%;
     max-width: 700px;
-  }
-}
-
-/* landscape */
-@media screen and (orientation:landscape) {
-  .game-board-outermost {
-    width: 90vh;
   }
 }
 
