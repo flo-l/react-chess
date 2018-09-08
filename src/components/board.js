@@ -9,36 +9,37 @@ function Square(props) {
     <svg viewBox="0 0 14 14"
       className={classNames.join(' ')}
       onClick={props.onClick}>
-      <text x="50%" y="50%" font-size="9" dominant-baseline="middle" text-anchor="middle">{props.value}</text>
+      <text x="50%" y="50%" fontSize="9" dominantBaseline="middle" textAnchor="middle">{props.value}</text>
     </svg>
   );
 }
 
 function HorizontalDescriptions(props) {
-  const square = (<div className="description description-square"></div>);
   const descriptions = [...Array(8).keys()].reverse().map(i => {
     return (
-      <svg viewBox="0 0 14 5"
+      <svg key={i*2}
+        viewBox="0 0 14 5"
         className="description description-horizontal">
-        <text x="50%" y="50%" font-size="3.5" dominant-baseline="middle" text-anchor="middle">{i + 1}</text>
+        <text x="50%" y="50%" fontSize="3.5" dominantBaseline="middle" textAnchor="middle">{i + 1}</text>
       </svg>
     )
   });
 
   return (
     <React.Fragment>
-      {square}
+      <div key={"first-" + props.x}className="description description-square"></div>
       {descriptions}
-      {square}
+      <div key={"second-" + props.x}className="description description-square"></div>
     </React.Fragment>
   );
 }
 
 function VerticalDescription(props) {
   return (
-    <svg viewBox="0 0 5 14"
+    <svg
+      viewBox="0 0 5 14"
       className="description description-vertical">
-      <text x="50%" y="50%" font-size="3.5" dominant-baseline="middle" text-anchor="middle">{String.fromCharCode('a'.charCodeAt() + props.i)}</text>
+      <text x="50%" y="50%" fontSize="3.5" dominantBaseline="middle" textAnchor="middle">{String.fromCharCode('a'.charCodeAt() + props.i)}</text>
     </svg>
   )
 }
@@ -46,9 +47,9 @@ function VerticalDescription(props) {
 function VerticalDescriptions(props) {
   const descriptions = [...Array(8).keys()].map(i => {
     return (
-      <React.Fragment>
-        <VerticalDescription i={i}/>
-        <VerticalDescription i={i}/>
+      <React.Fragment key={"fragment" + i}>
+        <VerticalDescription i={i} key={"first" + i}/>
+        <VerticalDescription i={i} key={"second" + i}/>
       </React.Fragment>
     );
   });
@@ -64,7 +65,7 @@ function BoardInner(props) {
   const size = props.size;
   const rows = [...Array(size).keys()].map((_, row) => {
     return(
-      <React.StrictMode>
+      <React.StrictMode key={"strict" + row}>
         {
           [...Array(size).keys()]
           .map((_, col) => {
@@ -93,8 +94,8 @@ function BoardInner(props) {
   });
 
   return (
-    <div class="game-board-outer">
-    <div class="game-board-inner">
+    <div className="game-board-outer">
+    <div className="game-board-inner">
       {rows}
     </div>
     </div>
@@ -104,12 +105,12 @@ function BoardInner(props) {
 // this renders a n times n grid with Square
 export default function Board(props) {
   return (
-    <div class="game-board-outermost">
+    <div className="game-board-outermost">
       <BoardInner {...props}/>
 
-      <HorizontalDescriptions />
+      <HorizontalDescriptions x={1}/>
       <VerticalDescriptions />
-      <HorizontalDescriptions />
+      <HorizontalDescriptions x={2}/>
     </div>
   );
 }
