@@ -75,7 +75,7 @@ div#root {
 /* landscape */
 @media screen and (orientation:landscape) {
   .game-board-outermost {
-    width: 50%;
+    width: 90vh;
   }
 }
 
