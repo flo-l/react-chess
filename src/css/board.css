@@ -1,0 +1,86 @@
+.game-board-inner {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows:    repeat(8, 1fr);
+  grid-gap: 1px;
+  border: 1px solid #7c3e3e;
+  background: #7c3e3e;
+}
+
+.game-board-outer {
+  position: relative;
+  padding-bottom: 100%;
+  width: 100%;
+  grid-area: s;
+}
+
+.game-board-outermost {
+  width: 90vh;
+  display: grid;
+  grid-template-areas:
+              ". . . . . . . . . ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". s s s s s s s s ."
+              ". . . . . . . . . .";
+  grid-template-columns: 0.4fr repeat(8, 1fr) 0.4fr;
+  grid-template-rows:    0.5fr repeat(8, 1fr) 0.5fr;
+}
+
+/* desktop */
+@media screen and (min-width:801px) {
+  .game-board-outermost {
+    width: 50%;
+    max-width: 700px;
+  }
+}
+
+.square {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+svg {
+  cursor: default;
+}
+
+.description {
+  align-self: center;
+  justify-self: center;
+}
+
+.description-vertical {
+  height: 100%;
+}
+
+.description-horizontal {
+  width: 100%;
+}
+
+.selected {
+  _border: 1px solid black;
+  background: #e0df63;
+}
+
+.possible_move {
+  _border: 1px solid black;
+  background: #80a0ea;
+}
+
+.black {
+  background: #997c3f;
+}
+
+.white {
+  background: #e4e1b8;
+}

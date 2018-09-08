@@ -1,0 +1,28 @@
+.game {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 100;
+  margin: 0;
+}
+
+.game-info {
+  width: 20%;
+  margin: 2em;
+  font-size: 1.4em;
+  text-align: center;
+}
+
+/* portrait */
+@media screen and (orientation:portrait) {
+  .game-info {
+    width: 100%;
+  }
+}
+
+.status {
+  display: block;
+  height: 100%;
+}

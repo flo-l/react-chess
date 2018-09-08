@@ -1,6 +1,8 @@
 import React from 'react';
 import Board from './board';
 
+import '../css/game.css'
+
 export default function Game(props) {
   return (
     <div className="game">

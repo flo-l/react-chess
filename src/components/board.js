@@ -1,6 +1,8 @@
 import React from 'react';
 import { getIndex } from '../chess_helpers.js';
 
+import '../css/board.css'
+
 function Square(props) {
   let classNames = ["square"];
   if (props.background)  { classNames.push(props.background); }
