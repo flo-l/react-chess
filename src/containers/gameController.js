@@ -20,9 +20,9 @@ const mapStateToProps = state => {
       status = state.board.chess.enemyString() + " player won.";
     }
   } else if (state.board.playerMustChoosePiece) {
-    status = state.board.chess.enemyString() + " player, please choose your promotion piece"
+    status = state.board.chess.enemyString() + " player, please choose your promotion piece."
   } else {
-    status = "Next player is " + state.board.chess.playerString();
+    status = "Next player is " + state.board.chess.playerString() + ".";
   }
 
   return {
