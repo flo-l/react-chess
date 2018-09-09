@@ -40,7 +40,6 @@
 /* desktop */
 @media screen and (min-width:801px) {
   .game-board-outermost {
-    width: 50%;
     max-width: 700px;
   }
 }
