@@ -10,7 +10,7 @@ function Square(props) {
   return (
     <svg viewBox="0 0 14 14"
       className={classNames.join(' ')}
-      fontFamily="Century Gothic"
+      fontFamily="gothic"
       style={
         {
           "gridRow":    props.displayedRow + 1,
@@ -32,7 +32,7 @@ function HorizontalDescriptions(props) {
     return (
       <svg key={i*2}
         viewBox="0 0 5 5"
-        fontFamily="Century Gothic"
+        fontFamily="gothic"
         className="description"
         style={{
           gridRow:    displayed.row + 1,
@@ -56,7 +56,7 @@ function VerticalDescription(props) {
   return (
     <svg
       viewBox="0 0 5 5"
-      fontFamily="Century Gothic"
+      fontFamily="gothic"
       className="description"
       style={
         {
