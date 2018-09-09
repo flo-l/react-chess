@@ -1,0 +1,11 @@
+@font-face {
+	font-family: 'gothic';
+	src: url('fonts/gothic.eot');
+	src: local('Century Gothic'), url('fonts/gothic.woff') format('woff'), url('fonts/gothic.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'freeSerif';
+	src: local('FreeSerif');
+	src: url('fonts/FreeSerif.ttf') format('truetype'), url('fonts/FreeSerif.otf') format('opentype');;
+}
