@@ -17,7 +17,7 @@ function Square(props) {
         }
       }
       onClick={props.onClick}>
-      <text x="50%" y="50%" fontFamily="freeSerif" fontSize="9" dominantBaseline="middle" textAnchor="middle">{props.value}</text>
+      <text x="50%" y="50%" fontFamily="chessFreeSerif" fontSize="9" dominantBaseline="middle" textAnchor="middle">{props.value}</text>
     </svg>
   );
 }
