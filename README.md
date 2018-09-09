@@ -1,7 +1,7 @@
 A complete chess with react
 =======================
 
-![Screenshot](/../screenshots/screenshot1.png?raw=true "Screenshot")
+[![Screenshot](/../screenshots/screenshot1.png?raw=true "Screenshot")](https://flo-l.github.io/react-chess).
 
 This is a complete implementation of chess with react and redux.
 
