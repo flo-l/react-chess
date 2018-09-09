@@ -33,7 +33,9 @@ export const board = (state = initialState, action) => {
             });
           }
 
-          return state;
+          return Object.assign({}, state, {
+            selectedIndex: null,
+          });
       }
 
       case 'PROMOTION_CHOSEN': {
