@@ -34,7 +34,7 @@
               ". s s s s s s s s ."
               ". . . . . . . . . .";
   grid-template-columns: 0.4fr repeat(8, 1fr) 0.4fr;
-  grid-template-rows:    0.5fr repeat(8, 1fr) 0.5fr;
+  grid-template-rows:    0.4fr repeat(8, 1fr) 0.4fr;
 }
 
 .game-board-outermost {
@@ -60,8 +60,8 @@ svg {
 .description {
   align-self: center;
   justify-self: center;
-  width: 100%;
-  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .selected {
