@@ -18,13 +18,13 @@ export default function Game(props) {
         size={props.board_size}
         squares={props.squares}
         markedIndices={props.markedIndices}
-        flipDirection={props.flipDirection}
+        turn90={props.turn90}
         onClick={(i) => props.onClick(i)}
       />
 
     <div className="game-info">
       <div>{props.status}</div>
-      
+
       { promotion_picker }
     </div>
     </div>

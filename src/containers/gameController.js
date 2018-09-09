@@ -30,7 +30,7 @@ const mapStateToProps = state => {
     squares: state.board.chess.squares,
     markedIndices: marked,
     status: status,
-    flipDirection: state.board.flipDirection,
+    turn90: state.board.turn90,
     enemyColor: state.board.chess.enemyColor(),
     promotionVisible: state.board.playerMustChoosePiece !== undefined,
   };

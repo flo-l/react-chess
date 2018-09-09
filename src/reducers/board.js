@@ -4,7 +4,8 @@ const initialState = {
   chess: new ChessState(),
   selectedIndex: null,
   winner: null,
-  flipDirection: true, // TODO: create a way for the user to change this
+  // possible values are 0,1,2,3, which turn the board by 0, 90, 180 or 270 degree respectively
+  turn90: 0, // TODO: create a way for the user to change this
   playerMustChoosePiece: undefined, // set to idx of field if a pawn reaches the the last row and the player has not yet chosen the piece they get
 };
 

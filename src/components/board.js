@@ -25,17 +25,18 @@ function Square(props) {
 
 function HorizontalDescriptions(props) {
   const size = props.size;
+  const turn90Count = props.turn90;
   const descriptions = [...Array(size).keys()].map(i => {
-    const displayed_row = props.flipDirection ? i : size - 1 - i;
+    const displayed = turn90(props.gridRow, props.size - i, props.size + 2, turn90Count);
 
     return (
       <svg key={i*2}
-        viewBox="0 0 14 5"
+        viewBox="0 0 5 5"
         fontFamily="Century Gothic"
-        className="description description-horizontal"
+        className="description"
         style={{
-          gridRow: props.gridRow,
-          gridColumn: displayed_row + 2
+          gridRow:    displayed.row + 1,
+          gridColumn: displayed.col + 1,
         }}>
         <text x="50%" y="50%" fontSize="3.5" dominantBaseline="middle" textAnchor="middle">{i + 1}</text>
       </svg>
@@ -54,13 +55,13 @@ function HorizontalDescriptions(props) {
 function VerticalDescription(props) {
   return (
     <svg
-      viewBox="0 0 5 14"
+      viewBox="0 0 5 5"
       fontFamily="Century Gothic"
-      className="description description-vertical"
+      className="description"
       style={
         {
-          "gridRow":    props.displayedRow,
-          "gridColumn": props.displayedCol,
+          gridRow:    props.displayedRow + 1,
+          gridColumn: props.displayedCol + 1,
         }
       }>
       <text x="50%" y="50%" fontSize="3.5" dominantBaseline="middle" textAnchor="middle">{String.fromCharCode('a'.charCodeAt() + props.i)}</text>
@@ -69,13 +70,15 @@ function VerticalDescription(props) {
 }
 
 function VerticalDescriptions(props) {
+  const turn90Count = props.turn90;
   const descriptions = [...Array(8).keys()].map(i => {
-    const displayed_row = props.flipDirection ? i : props.size - 1 - i;
+    const displayed1 = turn90(props.size - i, 0, props.size + 2, turn90Count);
+    const displayed2 = turn90(props.size - i, 9, props.size + 2, turn90Count);
 
     return (
       <React.Fragment key={"fragment" + i}>
-        <VerticalDescription i={i} key={"first" + i}  displayedRow={displayed_row + 2} displayedCol={1}/>
-        <VerticalDescription i={i} key={"second" + i} displayedRow={displayed_row + 2} displayedCol={10}/>
+        <VerticalDescription i={i} key={"first" + i}  displayedRow={displayed1.row} displayedCol={displayed1.col}/>
+        <VerticalDescription i={i} key={"second" + i} displayedRow={displayed2.row} displayedCol={displayed2.col}/>
       </React.Fragment>
     );
   });
@@ -91,7 +94,7 @@ function VerticalDescriptions(props) {
 // it is always a perfect square
 function BoardInner(props) {
   const size = props.size;
-  const flip_direction = props.flipDirection;
+  const turn90Count = props.turn90;
 
   const rows = [...Array(size).keys()].map((_, row) => {
     return(
@@ -110,8 +113,7 @@ function BoardInner(props) {
               }
             }
 
-            const displayed_row = flip_direction ? size - 1 - row : row;
-            const displayed_col = flip_direction ? size - 1 - col : col;
+            const displayed = turn90(row, col, size, turn90Count);
 
             return <Square
               key={i}
@@ -119,8 +121,8 @@ function BoardInner(props) {
               value={props.squares[i]}
               onClick={() => props.onClick(i)}
               background={background}
-              displayedRow={displayed_row}
-              displayedCol={displayed_col}
+              displayedRow={displayed.row}
+              displayedCol={displayed.col}
             />;
           })
         }
@@ -137,14 +139,29 @@ function BoardInner(props) {
   );
 }
 
+// turns row and col times * 90°, assuming a grid of size * size
+function turn90(row, col, size, times) {
+  for (let i = 0; i < times; i++) {
+    // transpose
+    const buf = row;
+    row = col;
+    col = buf;
+
+    // mirror columns
+    col = size - 1 - col;
+  }
+
+  return {row: row, col: col};
+}
+
 export default function Board(props) {
   return (
     <div className="game-board-outermost">
       <BoardInner {...props}/>
 
-      <HorizontalDescriptions gridRow={1} {...props}/>
+      <HorizontalDescriptions gridRow={0} {...props}/>
       <VerticalDescriptions {...props}/>
-      <HorizontalDescriptions gridRow={10} {...props}/>
+      <HorizontalDescriptions gridRow={9} {...props}/>
     </div>
   );
 }

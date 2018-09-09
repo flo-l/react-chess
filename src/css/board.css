@@ -37,6 +37,10 @@
   grid-template-rows:    0.5fr repeat(8, 1fr) 0.5fr;
 }
 
+.game-board-outermost {
+  height: 100%;
+}
+
 /* desktop */
 @media screen and (min-width:801px) {
   .game-board-outermost {
@@ -56,14 +60,8 @@ svg {
 .description {
   align-self: center;
   justify-self: center;
-}
-
-.description-vertical {
-  height: 100%;
-}
-
-.description-horizontal {
   width: 100%;
+  height: 100%;
 }
 
 .selected {
