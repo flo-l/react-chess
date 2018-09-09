@@ -5,7 +5,7 @@
 }
 
 @font-face {
-	font-family: 'freeSerif';
+	font-family: 'chessFreeSerif';
 	src: local('FreeSerif');
-	src: url('fonts/FreeSerif.ttf') format('truetype'), url('fonts/FreeSerif.otf') format('opentype');;
+	src: url('fonts/ChessFreeSerif.ttf') format('truetype');
 }
