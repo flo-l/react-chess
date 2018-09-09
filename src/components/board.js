@@ -10,7 +10,6 @@ function Square(props) {
   return (
     <svg viewBox="0 0 14 14"
       className={classNames.join(' ')}
-      fontFamily="gothic"
       style={
         {
           "gridRow":    props.displayedRow + 1,
@@ -18,7 +17,7 @@ function Square(props) {
         }
       }
       onClick={props.onClick}>
-      <text x="50%" y="50%" fontSize="9" dominantBaseline="middle" textAnchor="middle">{props.value}</text>
+      <text x="50%" y="50%" fontFamily="freeSerif" fontSize="9" dominantBaseline="middle" textAnchor="middle">{props.value}</text>
     </svg>
   );
 }
