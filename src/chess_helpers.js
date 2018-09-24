@@ -17,12 +17,12 @@ export function getCol(idx) {
 }
 
 export function getFieldName(row, col) {
-  return String.fromCharCode(7 - row + "a".charCodeAt(0)) + col.toString();
+  return String.fromCharCode(7 - row + "a".charCodeAt(0)) + (8-col).toString();
 }
 
 export function getIndexFromFieldName(field_name) {
   const row = "a".charCodeAt(0) - field_name.charCodeAt(0) + 7;
-  const col = parseInt(field_name[1], 10);
+  const col = 8 - parseInt(field_name[1], 10);
 
   return getIndex(row, col);
 }
@@ -214,7 +214,9 @@ export class ChessState {
 
   // make a move in algebraic notation (an)
   makeMoveAn(an) {
-    return this.makeMove(getFrom(an), getTo(an));
+    const from = getFrom(an);
+    const to   = getTo(an);
+    return this.makeMove(from, to);
   }
 
   // this returns a new chess state with the move made

@@ -26,8 +26,6 @@ export default function Game(props) {
     status = "Next player is " + props.playerString + ".";
   }
 
-  console.log(status);
-
   let game_mode_chooser;
   if (!props.gameInitialized) {
     status = undefined;

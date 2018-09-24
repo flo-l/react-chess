@@ -12,13 +12,15 @@ const initialState = {
   ai: null,
 };
 
+import { getFieldName, getRow, getCol, getIndexFromFieldName } from '../chess_helpers'
+
 export const board = (state = initialState, action) => {
   switch (action.type) {
     case 'CLICK_SQUARE':
       if (state.winner !== null || state.playerMustChoosePiece !== undefined || !state.gameInitialized) {
         return state;
       }
-
+      
       if (state.chess.belongsToCurrentPlayer(action.index)) {
         return Object.assign({}, state, {
           selectedIndex: action.index
