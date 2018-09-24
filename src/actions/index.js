@@ -27,9 +27,10 @@ export const loadAi = () => {
     dispatch(initializingAi());
 
     // load ai js
-    const js = import("../engines/littlewing_web.js");
+    /*const js = import("../engines/littlewing_web.js");
     js.then((ai) => {
       dispatch(aiReady(ai));
     });
+    */
   };
 };
