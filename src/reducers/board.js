@@ -8,12 +8,14 @@ const initialState = {
   turn90: 2, // TODO: create a way for the user to change this
   playerMustChoosePiece: undefined, // set to idx of field if a pawn reaches the the last row and the player has not yet chosen the piece they get
   gameInitialized: false,
+  aiIsWhite: null,
+  ai: null,
 };
 
 export const board = (state = initialState, action) => {
   switch (action.type) {
     case 'CLICK_SQUARE':
-      if (state.winner !== null || state.playerMustChoosePiece !== undefined) {
+      if (state.winner !== null || state.playerMustChoosePiece !== undefined || !state.gameInitialized) {
         return state;
       }
 
@@ -53,13 +55,33 @@ export const board = (state = initialState, action) => {
           playerMustChoosePiece: undefined,
         });
       }
+
       case 'GAME_MODE_CHOSEN': {
-        console.log(state.chess.fen());
+        if (state.gameInitialized) {
+          return state;
+        }
 
         return Object.assign({}, state, {
           gameInitialized: true,
+          aiIsWhite: action.ai_is_white,
         });
       }
+
+      case 'AI_READY':
+        return Object.assign({}, state, {
+          ai: action.ai
+        });
+
+      case 'AI_MOVE':
+        console.log(action.move)
+        const new_chess_state = state.chess.makeMoveAn(action.move);
+
+        return Object.assign({}, state, {
+          selectedIndex: null,
+          chess: new_chess_state,
+          winner: new_chess_state.calculateWinner(),
+          playerMustChoosePiece: new_chess_state.promotionPending(),
+        });
     default:
       return state;
   }

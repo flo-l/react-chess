@@ -20,6 +20,21 @@ export function getFieldName(row, col) {
   return String.fromCharCode(7 - row + "a".charCodeAt(0)) + col.toString();
 }
 
+export function getIndexFromFieldName(field_name) {
+  const row = "a".charCodeAt(0) - field_name.charCodeAt(0) + 7;
+  const col = parseInt(field_name[1], 10);
+
+  return getIndex(row, col);
+}
+
+export function getFrom(move_string) {
+  return getIndexFromFieldName(move_string.slice(0, 2));
+}
+
+export function getTo(move_string) {
+  return getIndexFromFieldName(move_string.slice(2));
+}
+
 export function getColor(piece) {
   if (Object.values(WHITE).includes(piece)) { return WHITE; }
   if (Object.values(BLACK).includes(piece)) { return BLACK; }
@@ -195,6 +210,11 @@ export class ChessState {
       .map((x,i) => [x,i])
       .filter(x => x[0] === king)
       .some(x => this.isUnderAttack(x[1], ownColor));
+  }
+
+  // make a move in algebraic notation (an)
+  makeMoveAn(an) {
+    return this.makeMove(getFrom(an), getTo(an));
   }
 
   // this returns a new chess state with the move made

@@ -1,3 +1,4 @@
 [submodule "vendor/littlewing"]
 	path = vendor/littlewing
 	url = https://github.com/flo-l/littlewing_web.git
+	branch = master

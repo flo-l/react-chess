@@ -14,6 +14,7 @@ const mapStateToProps = state => {
 
   return {
     board_size: 8,
+    chess: state.board.chess,
     squares: state.board.chess.squares,
     markedIndices: marked,
     status: status,
@@ -31,16 +32,24 @@ const mapDispatchToProps = dispatch => {
   return {
     onClick: (idx) => dispatch(clickSquare(idx)),
     promotionChosen: (piece) => dispatch(promotionChosen(piece)),
-    gameModeChosen: (mode_white) => {
+    gameModeChosen: (mode_white, fen) => {
       dispatch(gameModeChosen(mode_white));
-      dispatch(loadAi());
+      dispatch(loadAi(mode_white, fen));
     },
   };
 }
 
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  const merged = {
+    gameModeChosen: (mode_white) => dispatchProps.gameModeChosen(mode_white, stateProps.chess.fen()),
+  }
+  return Object.assign({}, ownProps, stateProps, dispatchProps, merged)
+};
+
 const GameController = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(Game);
 
 export default GameController;

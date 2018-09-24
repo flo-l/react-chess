@@ -8,6 +8,11 @@ export const clickSquare = index => ({
   index: index
 });
 
+export const aiMove = move => ({
+  type: 'AI_MOVE',
+  move: move,
+});
+
 export const promotionChosen = p => ({
   type: 'PROMOTION_CHOSEN',
   piece: p,
@@ -22,7 +27,9 @@ export const aiReady = (ai) => ({
   ai: ai,
 })
 
-export const loadAi = () => {
+import { getRow, getCol, getIndex, getFieldName, getIndexFromFieldName } from '../chess_helpers'
+
+export const loadAi = (ai_is_white, fen) => {
   return dispatch => {
     dispatch(initializingAi());
 
@@ -30,6 +37,12 @@ export const loadAi = () => {
     const js = import("../engines/littlewing_web.js");
     js.then((ai) => {
       dispatch(aiReady(ai));
+
+      if (ai_is_white) {
+        // let ai make first move
+        const next_move = ai.get_next_move(fen, ai_is_white);
+        dispatch(aiMove(next_move));
+      }
     });
   };
 };
