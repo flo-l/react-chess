@@ -1,6 +1,6 @@
 export const gameModeChosen = mode => ({
   type: 'GAME_MODE_CHOSEN',
-  mode: mode
+  ai_is_white: mode
 })
 
 export const clickSquare = index => ({

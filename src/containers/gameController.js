@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Game from '../components/game'
-import { clickSquare, promotionChosen } from '../actions'
+import { clickSquare, promotionChosen, gameModeChosen, loadAi } from '../actions'
 
 const mapStateToProps = state => {
   let marked = Array(64).fill(null);
@@ -12,19 +12,6 @@ const mapStateToProps = state => {
     }
   }
 
-  let status;
-  if (state.board.winner !== null) {
-    if (state.board.winner === 'DRAW') {
-      status = "It's a draw!"
-    } else {
-      status = state.board.chess.enemyString() + " player won.";
-    }
-  } else if (state.board.playerMustChoosePiece) {
-    status = state.board.chess.enemyString() + " player, please choose your promotion piece."
-  } else {
-    status = "Next player is " + state.board.chess.playerString() + ".";
-  }
-
   return {
     board_size: 8,
     squares: state.board.chess.squares,
@@ -33,6 +20,10 @@ const mapStateToProps = state => {
     turn90: state.board.turn90,
     enemyColor: state.board.chess.enemyColor(),
     promotionVisible: state.board.playerMustChoosePiece !== undefined,
+    gameInitialized: state.board.gameInitialized,
+    winner: state.board.winner,
+    enemyString: state.board.chess.enemyString(),
+    playerString: state.board.chess.playerString(),
   };
 };
 
@@ -40,6 +31,10 @@ const mapDispatchToProps = dispatch => {
   return {
     onClick: (idx) => dispatch(clickSquare(idx)),
     promotionChosen: (piece) => dispatch(promotionChosen(piece)),
+    gameModeChosen: (mode_white) => {
+      dispatch(gameModeChosen(mode_white));
+      dispatch(loadAi());
+    },
   };
 }
 

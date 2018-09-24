@@ -7,6 +7,7 @@ const initialState = {
   // possible values are 0,1,2,3, which turn the board by 0, 90, 180 or 270 degree respectively
   turn90: 2, // TODO: create a way for the user to change this
   playerMustChoosePiece: undefined, // set to idx of field if a pawn reaches the the last row and the player has not yet chosen the piece they get
+  gameInitialized: false,
 };
 
 export const board = (state = initialState, action) => {
@@ -48,6 +49,11 @@ export const board = (state = initialState, action) => {
           chess: new_chess_state,
           winner: new_chess_state.calculateWinner(),
           playerMustChoosePiece: undefined,
+        });
+      }
+      case 'GAME_MODE_CHOSEN': {
+        return Object.assign({}, state, {
+          gameInitialized: true,
         });
       }
     default:

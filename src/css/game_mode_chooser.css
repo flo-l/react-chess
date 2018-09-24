@@ -1,0 +1,19 @@
+
+
+div.game-mode-chooser-inner {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 2px;
+  border: 2px solid #7c3e3e;
+  background-color: #7c3e3e;
+  margin-top: .5em;
+}
+
+div.game-mode-option {
+  background-color: white;
+}
+
+div.game-mode-option:hover {
+  background-color: #d18d8d;
+  cursor: pointer;
+}
