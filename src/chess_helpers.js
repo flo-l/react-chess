@@ -1,4 +1,4 @@
-import {BLACK, WHITE} from './pieces.js';
+import {BLACK, WHITE, FEN} from './pieces.js';
 
 export function getIndex(row, col) {
   if (row >= 0 && row < 8 && col >= 0 && col < 8) {
@@ -14,6 +14,10 @@ export function getRow(idx) {
 export function getCol(idx) {
   const col = idx % 8;
   if (col >= 0 && col < 8) { return col; }
+}
+
+export function getFieldName(row, col) {
+  return String.fromCharCode(7 - row + "a".charCodeAt(0)) + col.toString();
 }
 
 export function getColor(piece) {
@@ -109,6 +113,64 @@ export class ChessState {
 
   belongsToCurrentPlayer(i) {
     return Object.values(this.playerColor()).includes(this.squares[i]);
+  }
+
+  fen() {
+    // positions
+    const pos = Array(8).fill().map((_,col) => {
+      return Array(8).fill().map((_,row) => {
+        const idx = getIndex(7-row, col);
+        const piece = this.squares[idx];
+        if (piece) {
+          return FEN[piece];
+        } else {
+          return null;
+        }
+      }).reduce((acc, elem) => {
+        if (elem === null) {
+          if (!acc.str.endsWith(acc.count.toString())) {
+            acc.str = acc.str + acc.count.toString();
+          }
+          acc.count += 1;
+          acc.str = acc.str.slice(0, -1) + acc.count.toString();
+        } else {
+          acc.count = 0;
+          acc.str = acc.str + elem;
+        }
+
+        return acc;
+      }, {count: 0, str: ""}).str;
+    }).join("/");
+
+    // active color
+    const active = this.whiteIsNext ? 'w' : 'b';
+
+    // castling
+    let castling = [
+      this.playerState[0].row0RookMoved ? null: 'K',
+      this.playerState[0].row7RookMoved ? null: 'Q',
+      this.playerState[1].row0RookMoved ? null: 'k',
+      this.playerState[1].row7RookMoved ? null: 'q',
+    ].join("");
+
+    if (castling === "") { castling = "-" }
+
+    // en passant
+    let en_passant;
+    if (this.otherPlayerState().pawnMoved !== null) {
+      const col = this.whiteIsNext ? 6 : 3;
+      en_passant = getFieldName(this.otherPlayerState().pawnMoved, col);
+    } else {
+      en_passant = "-";
+    }
+
+    // halfmoves
+    const halfmoves = 0; // TODO this is not implemented
+
+    // fullmoves
+    const fullmoves = Math.floor(this.turnCount / 2);
+
+    return [pos, active, castling, en_passant, halfmoves, fullmoves].join(" ");
   }
 
   // by enemy of ownColor

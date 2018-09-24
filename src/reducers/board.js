@@ -26,6 +26,8 @@ export const board = (state = initialState, action) => {
           if (state.chess.getPossibleMoves(state.selectedIndex).includes(action.index)) {
             const new_chess_state = state.chess.makeMove(state.selectedIndex, action.index);
 
+            console.log(new_chess_state.fen());
+
             return Object.assign({}, state, {
               selectedIndex: null,
               chess: new_chess_state,
@@ -52,6 +54,8 @@ export const board = (state = initialState, action) => {
         });
       }
       case 'GAME_MODE_CHOSEN': {
+        console.log(state.chess.fen());
+
         return Object.assign({}, state, {
           gameInitialized: true,
         });

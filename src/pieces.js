@@ -15,3 +15,21 @@ export const WHITE = {
   KNIGHT: '♘',
   PAWN: '♙',
 };
+
+export const FEN = {
+  // white
+  '♔': 'K',
+  '♕': 'Q',
+  '♖': 'R',
+  '♗': 'B',
+  '♘': 'N',
+  '♙': 'P',
+
+  // black
+  '♚': 'k',
+  '♛': 'q',
+  '♜': 'r',
+  '♝': 'b',
+  '♞': 'n',
+  '♟': 'p',
+}
