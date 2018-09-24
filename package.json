@@ -3,26 +3,34 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "gh-pages": "^1.2.0",
     "permutation-engine": "^0.1.5",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
     "react-redux": "5.0",
-    "react-scripts": "1.1.4",
     "redux": "^4.0.0",
-    "webpack": "^3.11.0",
-    "webpack-dev-server": "^3.1.5"
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
+    "start": "webpack-dev-server --mode development",
+    "build-wasm": "./build_littlewing.sh",
+    "prebuild": "yarn run build-wasm",
+    "build": "webpack --mode production",
+    "predeploy": "yarn run build",
     "deploy": "gh-pages -d build"
   },
   "devDependencies": {
-    "webpack-command": "^0.4.1"
+    "@babel/cli": "7.1.0",
+    "@babel/core": "7.1.0",
+    "@babel/preset-env": "7.1.0",
+    "@babel/preset-react": "7.0.0",
+    "babel-loader": "^8.0.2",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "css-loader": "1.0.0",
+    "react-hot-loader": "4.3.11",
+    "style-loader": "0.23.0",
+    "webpack": "4.19.1",
+    "webpack-cli": "3.1.1",
+    "webpack-dev-server": "3.1.8"
   },
   "homepage": "https://flo-l.github.io/react-chess"
 }
