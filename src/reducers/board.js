@@ -27,8 +27,8 @@ export const board = (state = initialState, action) => {
         });
 
       case 'MAKE_MOVE':
-        console.assert(state.selectedIndex !== null && state.chess.getPossibleMoves(state.selectedIndex).includes(action.index))
-        const new_chess_state = state.chess.makeMove(state.selectedIndex, action.index);
+        console.assert(state.chess.getPossibleMoves(action.from).includes(action.to))
+        const new_chess_state = state.chess.makeMove(action.from, action.to);
 
         console.log(new_chess_state.fen());
 

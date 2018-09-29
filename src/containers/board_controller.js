@@ -25,6 +25,7 @@ const mapStateToProps = state => {
     indexSelectable: selectable,
     movePossible: possibleMoves,
     markedIndices: marked,
+    selectedIndex: state.board.selectedIndex,
     turn90: state.board.turn90,
   };
 };
@@ -34,13 +35,21 @@ const mapDispatchToProps = dispatch => {
     onClick: (idx) => dispatch(clickSquare(idx)),
     selectSquare: (idx) => dispatch(selectSquare(idx)),
     unselectSquare: () => dispatch(unselectSquare()),
-    makeMove: (idx) => dispatch(makeMove(idx)),
+    makeMove: (from, to) => dispatch(makeMove(from, to)),
   };
-}
+};
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+  const merged = {
+    makeMove: (to) => dispatchProps.makeMove(stateProps.selectedIndex, to),
+  }
+  return Object.assign({}, ownProps, stateProps, dispatchProps, merged)
+};
 
 const BoardController = connect(
   mapStateToProps,
   mapDispatchToProps,
+  mergeProps,
 )(Board);
 
 export default BoardController;

@@ -35,6 +35,13 @@ export function getTo(move_string) {
   return getIndexFromFieldName(move_string.slice(2));
 }
 
+export function decodeAn(move_string) {
+  return {
+    from: getFrom(move_string),
+    to: getTo(move_string),
+  };
+}
+
 export function getColor(piece) {
   if (Object.values(WHITE).includes(piece)) { return WHITE; }
   if (Object.values(BLACK).includes(piece)) { return BLACK; }
@@ -210,13 +217,6 @@ export class ChessState {
       .map((x,i) => [x,i])
       .filter(x => x[0] === king)
       .some(x => this.isUnderAttack(x[1], ownColor));
-  }
-
-  // make a move in algebraic notation (an)
-  makeMoveAn(an) {
-    const from = getFrom(an);
-    const to   = getTo(an);
-    return this.makeMove(from, to);
   }
 
   // this returns a new chess state with the move made

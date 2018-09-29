@@ -1,3 +1,5 @@
+import { decodeAn } from '../chess_helpers'
+
 export const gameModeChosen = mode => ({
   type: 'GAME_MODE_CHOSEN',
   ai_is_white: mode
@@ -12,14 +14,10 @@ export const unselectSquare = () => ({
   type: 'UNSELECT_SQUARE',
 });
 
-export const makeMove = index => ({
+export const makeMove = (from, to) => ({
   type: 'MAKE_MOVE',
-  index: index
-});
-
-export const aiMove = move => ({
-  type: 'AI_MOVE',
-  move: move,
+  from: from,
+  to: to,
 });
 
 export const promotionChosen = p => ({
@@ -36,8 +34,6 @@ export const aiReady = (ai) => ({
   ai: ai,
 })
 
-import { getRow, getCol, getIndex, getFieldName, getIndexFromFieldName } from '../chess_helpers'
-
 export const loadAi = (ai_is_white, fen) => {
   return dispatch => {
     dispatch(initializingAi());
@@ -50,7 +46,8 @@ export const loadAi = (ai_is_white, fen) => {
       if (ai_is_white) {
         // let ai make first move
         const next_move = ai.get_next_move(fen, ai_is_white);
-        dispatch(aiMove(next_move));
+        const decoded = decodeAn(next_move);
+        dispatch(makeMove(decoded.from, decoded.to));
       }
     });
   };
