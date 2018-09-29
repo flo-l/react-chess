@@ -45,7 +45,7 @@ export const loadAi = (ai_is_white, fen) => {
 
       if (ai_is_white) {
         // let ai make first move
-        const next_move = ai.get_next_move(fen, ai_is_white);
+        const next_move = ai.get_next_move(fen);
         const decoded = decodeAn(next_move);
         dispatch(makeMove(decoded.from, decoded.to));
       }
