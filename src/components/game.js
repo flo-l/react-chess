@@ -1,5 +1,5 @@
 import React from 'react';
-import Board from './board';
+import BoardController from '../containers/board_controller';
 import GameModeChooser from './game_mode_chooser';
 import PromotionPicker from './promotion_picker';
 
@@ -34,20 +34,14 @@ export default function Game(props) {
 
   return (
     <div className="game">
-      <Board
-        size={props.board_size}
-        squares={props.squares}
-        markedIndices={props.markedIndices}
-        turn90={props.turn90}
-        onClick={(i) => props.onClick(i)}
-      />
+      <BoardController />
 
-    <div className="game-info">
-      <div>{status}</div>
+      <div className="game-info">
+        <div>{status}</div>
 
-      { game_mode_chooser }
-      { promotion_picker }
-    </div>
+        { game_mode_chooser }
+        { promotion_picker }
+      </div>
     </div>
   );
 }

@@ -2,10 +2,11 @@ import React from 'react';
 import { hot } from "react-hot-loader";
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
+import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
 import rootReducer from './reducers'
-import GameController from './containers/gameController'
+import GameController from './containers/game_controller'
 
 import './index.css'
 
@@ -18,7 +19,9 @@ const store = createStore(
 );
 
 ReactDOM.render(
-  <GameController store={store} />,
+  <Provider store={store}>
+    <GameController />
+  </Provider>,
   document.getElementById('root')
 );
 

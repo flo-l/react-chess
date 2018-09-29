@@ -13,24 +13,19 @@ const mapStateToProps = state => {
   }
 
   return {
-    board_size: 8,
+    gameInitialized: state.board.gameInitialized,
     chess: state.board.chess,
-    squares: state.board.chess.squares,
-    markedIndices: marked,
     status: status,
-    turn90: state.board.turn90,
+    winner: state.board.winner,
+    playerString: state.board.chess.playerString(),
+    enemyString: state.board.chess.enemyString(),
     enemyColor: state.board.chess.enemyColor(),
     promotionVisible: state.board.playerMustChoosePiece !== undefined,
-    gameInitialized: state.board.gameInitialized,
-    winner: state.board.winner,
-    enemyString: state.board.chess.enemyString(),
-    playerString: state.board.chess.playerString(),
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onClick: (idx) => dispatch(clickSquare(idx)),
     promotionChosen: (piece) => dispatch(promotionChosen(piece)),
     gameModeChosen: (mode_white, fen) => {
       dispatch(gameModeChosen(mode_white));
