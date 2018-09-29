@@ -16,34 +16,28 @@ import { getFieldName, getRow, getCol, getIndexFromFieldName } from '../chess_he
 
 export const board = (state = initialState, action) => {
   switch (action.type) {
-    case 'CLICK_SQUARE':
-      if (state.winner !== null || state.playerMustChoosePiece !== undefined || !state.gameInitialized) {
-        return state;
-      }
-      
-      if (state.chess.belongsToCurrentPlayer(action.index)) {
+      case 'SELECT_SQUARE':
         return Object.assign({}, state, {
           selectedIndex: action.index
         });
-      } else {
-          // check if the click is valid etc..
-          if (state.chess.getPossibleMoves(state.selectedIndex).includes(action.index)) {
-            const new_chess_state = state.chess.makeMove(state.selectedIndex, action.index);
 
-            console.log(new_chess_state.fen());
+      case 'UNSELECT_SQUARE':
+        return Object.assign({}, state, {
+          selectedIndex: null
+        });
 
-            return Object.assign({}, state, {
-              selectedIndex: null,
-              chess: new_chess_state,
-              winner: new_chess_state.calculateWinner(),
-              playerMustChoosePiece: new_chess_state.promotionPending(),
-            });
-          }
+      case 'MAKE_MOVE':
+        console.assert(state.selectedIndex !== null && state.chess.getPossibleMoves(state.selectedIndex).includes(action.index))
+        const new_chess_state = state.chess.makeMove(state.selectedIndex, action.index);
 
-          return Object.assign({}, state, {
-            selectedIndex: null,
-          });
-      }
+        console.log(new_chess_state.fen());
+
+        return Object.assign({}, state, {
+          selectedIndex: null,
+          chess: new_chess_state,
+          winner: new_chess_state.calculateWinner(),
+          playerMustChoosePiece: new_chess_state.promotionPending(),
+        });
 
       case 'PROMOTION_CHOSEN': {
         if (state.playerMustChoosePiece === undefined) {
@@ -72,17 +66,6 @@ export const board = (state = initialState, action) => {
       case 'AI_READY':
         return Object.assign({}, state, {
           ai: action.ai
-        });
-
-      case 'AI_MOVE':
-        console.log(action.move)
-        const new_chess_state = state.chess.makeMoveAn(action.move);
-
-        return Object.assign({}, state, {
-          selectedIndex: null,
-          chess: new_chess_state,
-          winner: new_chess_state.calculateWinner(),
-          playerMustChoosePiece: new_chess_state.promotionPending(),
         });
     default:
       return state;

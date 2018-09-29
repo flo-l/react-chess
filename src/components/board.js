@@ -112,13 +112,22 @@ function BoardInner(props) {
               }
             }
 
+            let onClick = null;
+            if (props.movePossible[i]) {
+              onClick = (() => props.makeMove(i));
+            } else if (props.indexSelectable[i]) {
+              onClick = (() => props.selectSquare(i));
+            } else {
+              onClick = props.unselectSquare;
+            }
+
             const displayed = turn90(row, col, size, turn90Count);
 
             return <Square
               key={i}
               i={i}
               value={props.squares[i]}
-              onClick={() => props.onClick(i)}
+              onClick={onClick}
               background={background}
               displayedRow={displayed.row}
               displayedCol={displayed.col}

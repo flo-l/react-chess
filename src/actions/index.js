@@ -3,8 +3,17 @@ export const gameModeChosen = mode => ({
   ai_is_white: mode
 })
 
-export const clickSquare = index => ({
-  type: 'CLICK_SQUARE',
+export const selectSquare = index => ({
+  type: 'SELECT_SQUARE',
+  index: index
+});
+
+export const unselectSquare = () => ({
+  type: 'UNSELECT_SQUARE',
+});
+
+export const makeMove = index => ({
+  type: 'MAKE_MOVE',
   index: index
 });
 
