@@ -34,7 +34,7 @@ export const aiReady = (ai) => ({
   ai: ai,
 })
 
-export const loadAi = (ai_is_white, fen) => {
+export const loadAi = (ai_is_white) => {
   return dispatch => {
     dispatch(initializingAi());
 
@@ -42,10 +42,10 @@ export const loadAi = (ai_is_white, fen) => {
     const js = import("../engines/littlewing_web.js");
     js.then((ai) => {
       dispatch(aiReady(ai));
-
+      
       if (ai_is_white) {
         // let ai make first move
-        dispatch(invokeAi(ai, fen));
+        dispatch(invokeAi());
       }
     });
   };

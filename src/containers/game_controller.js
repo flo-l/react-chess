@@ -27,24 +27,16 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     promotionChosen: (piece) => dispatch(promotionChosen(piece)),
-    gameModeChosen: (mode_white, fen) => {
+    gameModeChosen: (mode_white) => {
       dispatch(gameModeChosen(mode_white));
-      dispatch(loadAi(mode_white, fen));
+      dispatch(loadAi(mode_white));
     },
   };
 }
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const merged = {
-    gameModeChosen: (mode_white) => dispatchProps.gameModeChosen(mode_white, stateProps.chess.fen()),
-  }
-  return Object.assign({}, ownProps, stateProps, dispatchProps, merged)
-};
-
 const GameController = connect(
   mapStateToProps,
-  mapDispatchToProps,
-  mergeProps
+  mapDispatchToProps
 )(Game);
 
 export default GameController;
