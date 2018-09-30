@@ -30,8 +30,6 @@ export const board = (state = initialState, action) => {
         console.assert(state.chess.getPossibleMoves(action.from).includes(action.to))
         const new_chess_state = state.chess.makeMove(action.from, action.to);
 
-        console.log(new_chess_state.fen());
-
         return Object.assign({}, state, {
           selectedIndex: null,
           chess: new_chess_state,
