@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import Board from '../components/board'
-import { selectSquare, unselectSquare, makeMove } from '../actions'
+import { selectSquare, unselectSquare, makeMove, invokeAi } from '../actions'
 
 const mapStateToProps = state => {
   const marked = Array(64).fill(null);
@@ -27,6 +27,11 @@ const mapStateToProps = state => {
     markedIndices: marked,
     selectedIndex: state.board.selectedIndex,
     turn90: state.board.turn90,
+
+    // ai stuff
+    fen: state.board.chess.fen(),
+    ai: state.ai.ai,
+    currentPlayerIsHuman: state.ai.ai_is_white !== state.board.chess.whiteIsNext,
   };
 };
 
@@ -35,7 +40,10 @@ const mapDispatchToProps = dispatch => {
     onClick: (idx) => dispatch(clickSquare(idx)),
     selectSquare: (idx) => dispatch(selectSquare(idx)),
     unselectSquare: () => dispatch(unselectSquare()),
-    makeMove: (from, to) => dispatch(makeMove(from, to)),
+    makeMove: (from, to) => {
+      dispatch(makeMove(from, to));
+      dispatch(invokeAi());
+    },
   };
 };
 

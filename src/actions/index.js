@@ -45,10 +45,20 @@ export const loadAi = (ai_is_white, fen) => {
 
       if (ai_is_white) {
         // let ai make first move
-        const next_move = ai.get_next_move(fen);
-        const decoded = decodeAn(next_move);
-        dispatch(makeMove(decoded.from, decoded.to));
+        dispatch(invokeAi(ai, fen));
       }
     });
+  };
+};
+
+export const invokeAi = () => {
+  return (dispatch, getState) => {
+    // let ai make next move
+    const state = getState();
+    const ai = state.ai.ai;
+    const fen = state.board.chess.fen();
+    const next_move = ai.get_next_move(fen);
+    const decoded = decodeAn(next_move);
+    dispatch(makeMove(decoded.from, decoded.to));
   };
 };
